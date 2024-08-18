@@ -1,0 +1,60 @@
+{
+  "name": "high-georgia-welding",
+  "version": "1.0.0",
+  "main": "server.js",
+  "engines": {
+    "node": ">=16.20.2",
+    "npm": ">=8.19.4"
+  },
+  "browserslist": [
+    "last 2 versions",
+    "> 1%",
+    "not dead"
+  ],
+  "scripts": { 
+    "start": "node server.js",
+    "dev": "NODE_ENV=development nodemon",
+     "stop": "pkill -f nodemon",
+    "test": "NODE_ENV=test jest --config ./config/jest.config.js --detectOpenHandles --forceExit",
+    "test:verbose": "NODE_ENV=test jest --config ./config/jest.config.js --detectOpenHandles --forceExit --verbose",
+    "test:silent": "NODE_ENV=test jest --config ./config/jest.config.js --detectOpenHandles --forceExit --silent",
+    "autoprefixer": "postcss public/**/*.css --use autoprefixer -d dist/",
+    "stylelint": "stylelint 'public/**/styles.css'",
+    "build-css": "npm run autoprefixer && npm run stylelint",
+    "build": "npm run build-css && cp public/*.html dist/",
+    "create-admin": "node createInitialAdmin.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "clean-css": "^5.3.3",
+    "compression": "^1.7.4",
+    "connect-mongo": "^5.1.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.3.1",
+    "express-session": "^1.18.0",
+    "glightbox": "^3.3.0",
+    "helmet": "^7.1.0",
+    "joi": "^17.13.3",
+    "mongodb": "^6.8.0",
+    "mongoose": "^8.4.4",
+    "sanitize-html": "^2.13.0",
+    "validator": "^13.12.0",
+    "winston": "^3.13.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "jest": "^29.7.0",
+    "mongodb-memory-server": "^9.4.0",
+    "nodemon": "^3.1.4",
+    "postcss": "^8.4.40",
+    "postcss-cli": "^11.0.0",
+    "stylelint": "^16.8.1",
+    "stylelint-config-standard": "^36.0.1",
+    "supertest": "^7.0.0"
+  }
+}

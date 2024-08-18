@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="./styles.css"
+    />
+  </head>
+  <body>
+    <div class="content-container">
+      <header class="dashboard__header">
+        <h1
+          id="dashboard"
+          class="dashboard__title"
+        >
+          Dashboard
+        </h1>
+        <button
+          id="logoutButton"
+          class="dashboard__logout"
+        >
+          Logout
+        </button>
+      </header>
+
+      <main
+        class="dashboard__content"
+        role="main"
+      >
+        <section class="dashboard__card">
+          <h2
+            id="messages"
+            class="dashboard__card-title"
+          >
+            Messages
+          </h2>
+          <div class="dashboard__card-body">
+            <div class="dashboard__table-container">
+              <table
+                id="messagesTable"
+                class="dashboard__table"
+              >
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Message</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Messages will be dynamically inserted here -->
+                  <tr>
+                    <td>
+                      <button
+                        class="dashboard__button dashboard__button--delete"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Add more rows for demonstration -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="dashboard__card-footer">
+            <button
+              id="deleteAllMessages"
+              class="dashboard__button dashboard__button--delete"
+            >
+              Delete All Messages
+            </button>
+          </div>
+        </section>
+
+        <section class="dashboard__card">
+          <h2
+            id="allowed-emails"
+            class="dashboard__card-title"
+          >
+            Allowed Emails
+          </h2>
+          <div class="dashboard__card-body">
+            <div class="dashboard__table-container">
+              <table
+                id="allowedEmailsTable"
+                class="dashboard__table"
+              >
+                <thead>
+                  <tr>
+                    <th>Email</th>
+                    <th>Added At</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- Allowed emails will be dynamically inserted here -->
+                  <tr>
+                    <td>
+                      <button
+                        class="dashboard__button dashboard__button--delete"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="dashboard__card-footer">
+            <form
+              id="addEmailForm"
+              class="dashboard__form-group"
+            >
+              <input
+                type="email"
+                id="newEmail"
+                name="email"
+                required
+                placeholder="Enter email to allow"
+                class="dashboard__input"
+              />
+              <button
+                type="submit"
+                class="dashboard__button"
+              >
+                Add Email
+              </button>
+            </form>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="./scripts.js"></script>
+  </body>
+</html>

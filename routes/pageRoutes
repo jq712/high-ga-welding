@@ -1,0 +1,32 @@
+const express = require("express");
+const path = require("path");
+const pageRoutes = express.Router();
+const { authenticateSession } = require("../middleware/authMiddleware");
+
+const pages = ["index", "about", "contact", "certifications", "login"];
+
+pageRoutes.use((req, res, next) => {
+  if (req.path.startsWith("/dashboard") && !req.session.user) {
+    return res.redirect("/login");
+  }
+  next();
+});
+
+pageRoutes.get("/dashboard", authenticateSession, (req, res) => {
+  if (!req.session.user) {
+    return res.redirect("/login");
+  }
+  res.sendFile(path.join(__dirname, "..", "public", "dashboard.html"));
+});
+
+pageRoutes.get("/", (req, res) => {
+  res.redirect("/index");
+});
+
+pages.forEach((page) => {
+  pageRoutes.get(`/${page}`, (req, res) => {
+    res.sendFile(path.join(__dirname, "..", "public", `${page}.html`));
+  });
+});
+
+module.exports = pageRoutes;
