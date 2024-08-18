@@ -1,10 +1,17 @@
 const { AppError } = require("./errorHandler");
 
 exports.authenticateSession = (req, res, next) => {
+  console.log("Session:", JSON.stringify(req.session, null, 2));
+  console.log(
+    "User:",
+    req.session ? JSON.stringify(req.session.user, null, 2) : "No session"
+  );
   if (req.session && req.session.user) {
+    console.log("User authenticated");
     next();
   } else {
-    next(new AppError("You are not logged in", 401));
+    console.log("User not authenticated, redirecting to login");
+    res.redirect("/login");
   }
 };
 
