@@ -21,7 +21,6 @@
     "autoprefixer": "postcss public/**/*.css --use autoprefixer -d dist/",
     "stylelint": "stylelint 'public/**/styles.css'",
     "build-css": "npm run autoprefixer && npm run stylelint",
-    "build": "npm run build-css && cp public/*.html dist/",
     "create-admin": "node createInitialAdmin.js"
   },
   "keywords": [],
