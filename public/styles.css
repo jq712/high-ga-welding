@@ -815,7 +815,7 @@ a:active {
   margin: var(--space-800) 0;
 }
 /* Dashboard Styles */
-.content-container {
+.dashboard-container {
   width: min(95%, 1200px);
   margin: 20px auto;
   padding: 20px;
