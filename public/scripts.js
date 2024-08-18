@@ -49,7 +49,7 @@ async function handleFormSubmit(event, formId, apiEndpoint) {
   }
 }
 
-// Handle login
+// In your client-side JavaScript file
 async function handleLogin(event) {
   event.preventDefault();
   const form = event.target;
@@ -57,6 +57,7 @@ async function handleLogin(event) {
   const password = form.password.value;
 
   try {
+    console.log("Attempting login for:", email);
     const response = await fetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -64,17 +65,21 @@ async function handleLogin(event) {
       credentials: "include",
     });
 
-    const data = await response.json();
-
+    console.log("Login response status:", response.status);
     if (response.ok) {
+      const data = await response.json();
       console.log("Login successful:", data);
       window.location.href = "/dashboard";
+    } else if (response.status === 401) {
+      console.log("Authentication failed, redirecting to login");
+      window.location.href = "/login";
     } else {
-      console.error("Login failed:", data);
-      alert(data.message || "Login failed. Please try again.");
+      const errorData = await response.json();
+      console.error("Login failed:", errorData);
+      alert(errorData.message || "Login failed. Please try again.");
     }
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Login error:", error);
     alert("An unexpected error occurred. Please try again.");
   }
 }
