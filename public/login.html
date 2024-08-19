@@ -12,57 +12,69 @@
       href="styles.css"
     />
   </head>
-  <body>
-    <main>
-      <section class="content-container glassmorphism">
-        <h1 class="content-container__title">Login</h1>
-        <form class="login__form">
-          <div class="form__group">
-            <label
-              for="email"
-              class="form__label"
-              >Email:</label
-            >
-            <input
-              type="email"
-              id="email"
-              name="email"
-              class="form__input"
-              required
-            />
-          </div>
-          <div class="form__group">
-            <label
-              for="password"
-              class="form__label"
-              >Password:</label
-            >
+  <body class="login">
+    <main class="login__container">
+      <h3 class="login__header">
+        LOGIN to Access HighGeorgiaWelding.xyz dashboard
+      </h3>
+      <form
+        class="login__form"
+        id="login-form"
+      >
+        <div class="form__group">
+          <label
+            for="email"
+            class="form__label"
+            >Email:</label
+          >
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="form__input login__input"
+            required
+          />
+        </div>
+        <div class="form__group">
+          <label
+            for="password"
+            class="form__label"
+            >Password:</label
+          >
+          <div class="login__password-wrapper">
             <input
               type="password"
               id="password"
               name="password"
-              class="form__input"
+              class="form__input login__input"
               required
             />
+            <button
+              type="button"
+              class="login__password-toggle"
+            >
+              👀
+            </button>
           </div>
-          <button
-            type="submit"
-            class="btn login__submit"
-          >
-            Log In
-          </button>
-        </form>
-        <div class="login__signup-link">
-          Don't have an account?
-          <a
-            href="/signup"
-            class="login__signup-anchor"
-            >Sign up</a
-          >
         </div>
-      </section>
+        <button
+          type="button"
+          class="btn login__submit"
+          aria-controls="login-form"
+        >
+          Log In
+        </button>
+        <div class="login__divider">
+          <span>OR</span>
+        </div>
+      </form>
+      <p class="login__message">
+        <button class="btn btn--dark">Create an account</button>
+        Account creation and login are available exclusively for pre-authorized
+        email addresses. To request access, please consult with the
+        administrator.
+      </p>
     </main>
-
     <script src="scripts.js"></script>
   </body>
 </html>

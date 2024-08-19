@@ -84,6 +84,19 @@ async function handleLogin(event) {
   }
 }
 
+// New function to toggle password visibility
+function togglePasswordVisibility() {
+  const passwordInput = document.getElementById("password");
+  const toggleButton = document.querySelector(".login__password-toggle");
+  if (passwordInput.type === "password") {
+    passwordInput.type = "text";
+    toggleButton.textContent = "🙈";
+  } else {
+    passwordInput.type = "password";
+    toggleButton.textContent = "👀";
+  }
+}
+
 // Handle logout
 function handleLogout() {
   fetch("/api/auth/logout", {
@@ -303,6 +316,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const loginForm = document.querySelector(".login__form");
   if (loginForm) {
     loginForm.addEventListener("submit", handleLogin);
+
+    // Add event listener for password visibility toggle
+    const toggleButton = document.querySelector(".login__password-toggle");
+    if (toggleButton) {
+      toggleButton.addEventListener("click", togglePasswordVisibility);
+    }
   }
 
   // Dashboard functionality
