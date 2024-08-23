@@ -910,17 +910,37 @@ a:active {
   margin-bottom: var(--space-900);
 }
 
+
+@media (min-width: 768px) {
+  .register {
+    background: var(--gradient-secondary);
+  }
+
+  .register__container {
+    max-width: 500px;
+    padding: var(--space-800);
+  }
+}
+
+@media (min-width: 1200px) {
+  .login__container {
+    max-width: 600px;
+  }
+}
 @media (min-width: 768px) {
   .login {
     background: var(--gradient-secondary);
   }
 
   .login__container {
-    background: var(--clr-bg-primary);
-    min-height: 800px;
-    border: 1px solid var(--clr-primary);
+    max-width: 500px;
     padding: var(--space-800);
-    margin: var(--space-1000);
+  }
+}
+
+@media (min-width: 1200px) {
+  .login__container {
+    max-width: 600px;
   }
 }
 /* Signup Styles */
