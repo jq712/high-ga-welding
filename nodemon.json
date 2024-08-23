@@ -1,5 +1,5 @@
 {
-    "watch": ["./models", "./public/styles.css", "./routes", "./server.js", "./controllers", "./public/scripts.js"],
+    "watch": ["./models", "./public/styles.css", "./routes", "./server.js", "./controllers", "./public/scripts.js", "./public/*.html"],
     "ext": "js,json",
     "ignore": ["node_modules/"],
     "exec": "node server.js"

@@ -4,24 +4,21 @@ const { AppError } = require("../middleware/errorHandler");
 const bcrypt = require("bcryptjs");
 
 exports.register = async (req, res, next) => {
+  console.log('Register function called');
   try {
     const { email, password } = req.body;
-
+    console.log('Attempting to register:', email);
     const isAllowed = await AllowedEmail.findOne({ email });
+    console.log('Is email allowed:', !!isAllowed);
     if (!isAllowed) {
+      console.log('Email not authorized for registration');
       return next(new AppError("Email not authorized for registration", 403));
     }
-
+    console.log('Creating user in database');
     const user = await User.create({ email, password });
-    await AllowedEmail.deleteOne({ email });
-
-    req.session.user = {
-      id: user._id,
-      email: user.email,
-      role: user.role,
-      isAdmin: user.isAdmin,
-    };
-
+    console.log('User created:', user);
+    
+    // Add success response
     res.status(201).json({
       status: "success",
       data: {
@@ -34,13 +31,13 @@ exports.register = async (req, res, next) => {
       },
     });
   } catch (error) {
+    console.error('Error in register function:', error);
     if (error.code === 11000) {
       return next(new AppError("Email already in use", 400));
     }
     next(new AppError(error.message, 500));
   }
 };
-
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;

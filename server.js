@@ -95,11 +95,11 @@ app.use(
 // Routes
 app.use("/", pageRoutes); // Moved up to handle routes before static files
 
-// Serve public static files
 app.use("/api/forms", formRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use(
+  // Serve public static files
   express.static(path.join(__dirname, "public"), {
     index: false,
     extensions: ["js", "css", "png", "jpg", "gif", "svg"],

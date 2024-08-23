@@ -18,7 +18,53 @@ if (hamburgerMenu && dropdownMenu) {
   });
 }
 
-// Generic form submission handler
+function showCustomAlert(message, onConfirm) {
+  console.log('Showing custom alert:', message);
+  const modal = document.createElement('div');
+  modal.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  `;
+
+  const content = document.createElement('div');
+  content.style.cssText = `
+    background-color: black;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+  `;
+
+  const text = document.createElement('p');
+  text.textContent = message;
+
+  const button = document.createElement('button');
+  button.textContent = onConfirm ? 'Continue to Login' : 'OK';
+  button.style.cssText = `
+    margin-top: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+  `;
+  button.onclick = () => {
+    document.body.removeChild(modal);
+    if (onConfirm) onConfirm();
+  };
+
+  content.appendChild(text);
+  content.appendChild(button);
+  modal.appendChild(content);
+  document.body.appendChild(modal);
+  console.log('Custom alert created and appended to body');
+}
+
+// Handle form submission
 async function handleFormSubmit(event, formId, apiEndpoint) {
   event.preventDefault();
   const form = document.getElementById(formId);
@@ -37,54 +83,99 @@ async function handleFormSubmit(event, formId, apiEndpoint) {
       const result = await response.json();
       console.log("Success:", result);
       form.reset();
-      alert("Form submitted successfully!");
+      showCustomAlert("Form submitted successfully!");
     } else {
       const errorData = await response.json();
       console.error("Error:", errorData);
-      alert("An error occurred. Please try again.");
+      showCustomAlert(errorData.message || "An error occurred. Please try again.");
     }
   } catch (error) {
     console.error("Error:", error);
-    alert("An unexpected error occurred. Please try again.");
+    showCustomAlert("An unexpected error occurred. Please try again.");
   }
 }
 
-// In your client-side JavaScript file
+// Handle login
 async function handleLogin(event) {
   event.preventDefault();
-  const form = event.target;
-  const email = form.email.value.trim();
-  const password = form.password.value;
+  console.log('Login form submitted');
+
+  const email = document.querySelector('#email').value;
+  const password = document.querySelector('#password').value;
 
   try {
-    console.log("Attempting login for:", email);
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+    const response = await fetch('/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({ email, password }),
-      credentials: "include",
     });
 
-    console.log("Login response status:", response.status);
+    console.log('Login response status:', response.status);
+
+    const data = await response.json();
+    console.log('Login response data:', data);
+
     if (response.ok) {
-      const data = await response.json();
-      console.log("Login successful:", data);
-      window.location.href = "/dashboard";
-    } else if (response.status === 401) {
-      console.log("Authentication failed, redirecting to login");
-      window.location.href = "/login";
+      console.log('Login successful');
+      window.location.href = '/dashboard';
     } else {
-      const errorData = await response.json();
-      console.error("Login failed:", errorData);
-      alert(errorData.message || "Login failed. Please try again.");
+      console.error('Login failed:', data.message);
+      showCustomAlert(data.message);
     }
   } catch (error) {
-    console.error("Login error:", error);
-    alert("An unexpected error occurred. Please try again.");
+    console.error('Error during login:', error);
+    showCustomAlert('An error occurred during login');
+  }
+}
+async function handleRegister(event) {
+  event.preventDefault();
+  console.log('Register form submitted');
+
+  const form = event.target;
+  const email = form.querySelector('#email').value;
+  const password = form.querySelector('#password').value;
+  const confirmPassword = form.querySelector('#confirm-password').value;
+
+  if (password !== confirmPassword) {
+    console.log('Passwords do not match');
+    alert('Passwords do not match');
+    return;
+  }
+
+  try {
+    console.log('Sending registration request');
+    const response = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('Register response data:', data);
+
+    if (data.status === 'success') {
+      console.log('Registration successful');
+      alert('Registration successful! Please log in.');
+      window.location.href = './login.html';
+    } else {
+      console.error('Registration failed:', data.message);
+      alert(data.message || 'Registration failed. Please try again.');
+    }
+  } catch (error) {
+    console.error('Error during registration:', error);
+    alert(`An error occurred during registration: ${error.message}. Please try again.`);
   }
 }
 
-// New function to toggle password visibility
+// Toggle password visibility
 function togglePasswordVisibility() {
   const passwordInput = document.getElementById("password");
   const toggleButton = document.querySelector(".login__password-toggle");
@@ -112,7 +203,7 @@ function handleLogout() {
     })
     .catch((error) => {
       console.error("Logout error:", error);
-      alert("An error occurred during logout. Please try again.");
+      showCustomAlert("An error occurred during logout. Please try again.");
     });
 }
 
@@ -161,9 +252,9 @@ function updateMessagesTable(messages) {
         message.createdAt ? new Date(message.createdAt).toLocaleString() : ""
       }</td>
       <td>
-      <button class="dashboard__button dashboard__button--delete delete-message" data-id="${
-        message._id || ""
-      }">Delete</button>
+        <button class="dashboard__button dashboard__button--delete delete-message" data-id="${
+          message._id || ""
+        }">Delete</button>
       </td>
     `;
     tableBody.appendChild(row);
@@ -210,9 +301,9 @@ function updateAllowedEmailsTable(emails) {
       <td>${email.email || ""}</td>
       <td>${email.addedAt ? new Date(email.addedAt).toLocaleString() : ""}</td>
       <td>
- <button class="dashboard__button dashboard__button--delete delete-email" data-id="${
-   email._id || ""
- }">Delete</button>
+        <button class="dashboard__button dashboard__button--delete delete-email" data-id="${
+          email._id || ""
+        }">Delete</button>
       </td>
     `;
     tableBody.appendChild(row);
@@ -313,7 +404,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Login form submission
-  const loginForm = document.querySelector(".login__form");
+  const loginForm = document.getElementById("login-form");
   if (loginForm) {
     loginForm.addEventListener("submit", handleLogin);
 
@@ -322,6 +413,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (toggleButton) {
       toggleButton.addEventListener("click", togglePasswordVisibility);
     }
+  }
+
+  // Register form submission
+  const registerForm = document.getElementById("register-form");
+  if (registerForm) {
+    registerForm.addEventListener("submit", handleRegister);
   }
 
   // Dashboard functionality
@@ -396,8 +493,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Delete all messages button
-    const deleteAllMessagesButton =
-      document.getElementById("deleteAllMessages");
+    const deleteAllMessagesButton = document.getElementById("deleteAllMessages");
     if (deleteAllMessagesButton) {
       deleteAllMessagesButton.addEventListener("click", async () => {
         if (confirm("Are you sure you want to delete all messages?")) {
@@ -410,11 +506,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
     }
-  }
 
-  // Logout button
-  const logoutButton = document.getElementById("logoutButton");
-  if (logoutButton) {
-    logoutButton.addEventListener("click", handleLogout);
+    // Logout button
+    const logoutButton = document.getElementById("logout-button");
+    if (logoutButton) {
+      logoutButton.addEventListener("click", handleLogout);
+    }
   }
 });

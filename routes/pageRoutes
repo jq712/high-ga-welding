@@ -3,7 +3,14 @@ const path = require("path");
 const pageRoutes = express.Router();
 const { authenticateSession } = require("../middleware/authMiddleware");
 
-const pages = ["index", "about", "contact", "certifications", "login"];
+const pages = [
+  "index",
+  "about",
+  "contact",
+  "certifications",
+  "login",
+  "register",
+];
 
 pageRoutes.use((req, res, next) => {
   if (req.path.startsWith("/dashboard") && !req.session.user) {
