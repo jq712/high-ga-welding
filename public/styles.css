@@ -151,6 +151,10 @@ html {
   min-width: 350px;
 }
 
+#contact {
+  scroll-margin-top: 70px;
+}
+
 body {
   min-height: 100vh;
   min-height: 100svh;
