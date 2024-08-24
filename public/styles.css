@@ -159,14 +159,137 @@ body {
   background-repeat: no-repeat;
   background-attachment: scroll;
   color: var(--clr-text-primary);
-  font-family: var(--ff-base);
-  font-style: normal;
-  font-optical-sizing: auto;
-  line-height: 1.6;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+}
+
+/* Typography */
+
+body,
+.form__input,
+.form__textarea,
+.dashboard__input {
+  font-family: var(--ff-base);
+  font-style: normal;
+  font-optical-sizing: auto;
+  line-height: 1.6;
+}
+
+.header__company-name,
+.hero__headline,
+.section__header,
+.card__title,
+.contact__header,
+.login__header,
+.register__header,
+.dashboard__title,
+.error-title {
+  font-family: var(--ff-heading);
+}
+
+.hero__description,
+.contact__intro,
+.error-submessage {
+  font-family: var(--ff-accent);
+}
+
+.header__company-name {
+  font-weight: 700;
+  font-size: var(--fs-300);
+  letter-spacing: 1px;
+  font-style: italic;
+}
+
+.nav__list,
+.login__divider {
+  font-weight: 400;
+}
+
+.hero__headline {
+  font-size: var(--fs-500);
+  font-weight: 400;
+}
+
+.hero__description {
+  font-size: var(--fs-400);
+  font-style: italic;
+  font-weight: 200;
+}
+
+.section__header,
+.contact__header {
+  font-size: var(--fs-600);
+  font-weight: 600;
+}
+
+.card__title {
+  font-size: var(--fs-500);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+  text-transform: capitalize;
+}
+
+.card__text,
+.contact__form,
+.form__input,
+.form__textarea {
+  font-size: var(--fs-200);
+}
+
+.contact__intro,
+.contact__subheader {
+  font-size: var(--fs-300);
+}
+
+.contact__subheader {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.login__header,
+.register__header {
+  font-size: var(--fs-400);
+  text-align: center;
+}
+
+.login__message {
+  font-size: var(--fs-100);
+  line-height: 1.4;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: 0.5px;
+}
+
+.dashboard__title {
+  font-size: 2rem;
+}
+
+.dashboard__card-title {
+  font-size: 1.3rem;
+}
+
+.dashboard__table th {
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.error-title {
+  font-size: clamp(6rem, 20vw, 12rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.error-message {
+  font-size: var(--fs-400);
+}
+
+.error-submessage {
+  font-size: var(--fs-300);
+  font-style: italic;
 }
 
 /* Common Styles */
@@ -215,7 +338,6 @@ a:active {
   border: none;
   border-radius: var(--border-radius-sm);
   cursor: pointer;
-  font-weight: 600;
   font-size: var(--fs-xs);
   letter-spacing: 0.5px;
   min-width: 50px;
@@ -298,16 +420,12 @@ a:active {
 }
 
 .content-container__title {
-  font-family: var(--ff-heading);
-  font-size: var(--fs-600);
   margin-bottom: var(--space-600);
   text-align: center;
 }
 
 .content-container__text,
 .content-container__list {
-  font-family: var(--ff-base);
-  font-size: var(--fs-200);
   margin-bottom: var(--space-600);
 }
 
@@ -339,10 +457,7 @@ a:active {
 }
 
 .header__company-name {
-  font-weight: 700;
   color: var(--clr-text-primary);
-  font-size: var(--fs-300);
-  font-style: italic;
 }
 
 .nav__list {
@@ -352,8 +467,6 @@ a:active {
   list-style: none;
   padding: 0;
   position: relative;
-  font-weight: 700;
-  font-size: var(--fs-200);
 }
 
 /* Hamburger Menu Styles */
@@ -516,18 +629,9 @@ a:active {
 }
 
 .hero__headline {
+  color: var(--clr-text-primary);
   margin-top: 50px;
-  font-family: var(--ff-heading);
-  font-size: var(--fs-500);
-  font-weight: 600;
-  text-shadow: 0 0 10px rgb(255 255 255 / 50%);
-}
-
-.hero__description {
-  text-shadow: 0 0 10px rgb(255 255 255 / 50%);
-  font-family: var(--ff-base);
-  font-size: var(--fs-400);
-  font-weight: 400;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 .hero__cta-container {
@@ -571,8 +675,6 @@ a:active {
 /* Section Header Styles */
 
 .section__header {
-  font-size: var(--fs-700);
-  font-weight: 900;
   width: 100%;
   text-align: center;
   padding: var(--space-900) 0;
@@ -622,22 +724,16 @@ a:active {
 }
 
 .card__content {
-  padding: var(--space-500);
+  padding: var(--space-700);
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   background: var(--clr-bg-accent);
-}
-
-.card__title {
-  font-family: var(--ff-heading);
-  font-size: var(--fs-500);
-  margin-bottom: var(--space-500);
+  line-height: 1.6;
+  letter-spacing: 0.5px;
 }
 
 .card__text {
-  font-family: var(--ff-base);
-  font-size: var(--fs-100);
   color: var(--clr-text-primary);
   line-height: 1.6;
   margin-bottom: var(--space-500);
@@ -669,30 +765,32 @@ a:active {
 }
 
 /* Contact Styles */
-
 .contact__header {
   text-align: center;
-  font-size: var(--fs-700);
-  padding: var(--space-500) 0;
+  line-height: 1.2;
+  padding: var(--space-500) var(--space-400);
   border: 3px solid var(--clr-primary);
   border-radius: var(--border-radius-sm);
+  letter-spacing: -0.1px;
+  text-transform: uppercase;
 }
 
 .contact__intro {
   text-align: center;
   margin: var(--space-600) 0;
-  font-size: var(--fs-400);
+  line-height: 1.6;
+  max-width: 65ch;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .contact__subheader {
   text-align: center;
   margin-bottom: var(--space-700);
-  font-size: var(--fs-300);
-  font-weight: 700;
+  color: var(--clr-text-secondary);
 }
 
 .contact__form {
-  font-size: var(--fs-200);
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -729,7 +827,6 @@ a:active {
   border-radius: var(--border-radius-sm);
   background-color: rgb(255 255 255 / 10%);
   color: var(--clr-text-secondary);
-  font-size: var(--fs-200);
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -839,13 +936,6 @@ a:active {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.login__header {
-  font-style: normal;
-  font-size: var(--fs-400);
-  text-align: center;
-  margin-bottom: var(--space-400);
-}
-
 .login__form {
   display: flex;
   flex-direction: column;
@@ -856,7 +946,8 @@ a:active {
 .login__input,
 .login__submit,
 .login__message,
-.login__divider {
+.login__divider, 
+.login__link {
   width: 80vw;
   max-width: 300px;
 }
@@ -884,8 +975,7 @@ a:active {
   display: flex;
   align-items: center;
   text-align: center;
-  margin: 20px auto;
-  font-weight: 400;
+  margin: -20px auto -40px;
 }
 
 .login__divider::before,
@@ -903,30 +993,9 @@ a:active {
 }
 
 .login__message {
-  display: flex;
-  flex-direction: column;
-  font-size: var(--fs-100);
-  gap: var(--space-600);
-  margin-bottom: var(--space-900);
+margin-top: -40px;
 }
 
-
-@media (min-width: 768px) {
-  .register {
-    background: var(--gradient-secondary);
-  }
-
-  .register__container {
-    max-width: 500px;
-    padding: var(--space-800);
-  }
-}
-
-@media (min-width: 1200px) {
-  .login__container {
-    max-width: 600px;
-  }
-}
 @media (min-width: 768px) {
   .login {
     background: var(--gradient-secondary);
@@ -943,7 +1012,7 @@ a:active {
     max-width: 600px;
   }
 }
-/* Signup Styles */
+ /* Signup Styles (continued) */
 .register {
   background: var(--clr-bg-primary);
   min-height: 100vh;
@@ -957,7 +1026,6 @@ a:active {
   color: var(--clr-text-secondary);
   display: flex;
   flex-direction: column;
-  
   align-items: center;
   gap: var(--space-1000);
   width: 100%;
@@ -968,13 +1036,6 @@ a:active {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.register__header {
-  font-style: normal;
-  font-size: var(--fs-400);
-  text-align: center;
-  margin-bottom: var(--space-400);
-}
-
 .register__form {
   display: flex;
   align-items: center;
@@ -983,13 +1044,15 @@ a:active {
   width: 100%;
 }
 
-
+.register__submit {
+  width: 50%;
+  margin-bottom: -30px;
+}
 
 .register__submit:hover,
 .register__submit:focus {
   background-color: var(--clr-accent-dark);
 }
-
 
 .register__group {
   display: flex;
@@ -1000,7 +1063,6 @@ a:active {
 .register__login-link {
   margin-top: var(--space-600);
   text-align: center;
-  font-size: var(--fs-200);
 }
 
 .register__login-anchor {
@@ -1048,11 +1110,6 @@ a:active {
   border-bottom: 1px solid #333;
 }
 
-.dashboard__title {
-  font-size: 2rem;
-  color: var(--clr-text-secondary);
-}
-
 .dashboard__logout,
 .dashboard__button {
   color: var(--clr-text-primary);
@@ -1061,7 +1118,6 @@ a:active {
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-weight: bold;
 }
 
 .dashboard__logout {
@@ -1103,20 +1159,6 @@ a:active {
   border-color: var(--clr-primary);
 }
 
-.dashboard__card-title {
-  font-size: 1.3rem;
-  color: var(--clr-text-primary);
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  border-bottom: 2px solid #aaa;
-  padding-bottom: 0.5rem;
-  position: sticky;
-  top: 0;
-  background-color: #262626;
-  z-index: 1;
-}
-
 .dashboard__card-body {
   flex-grow: 1;
   overflow-y: auto;
@@ -1147,10 +1189,7 @@ a:active {
 
 .dashboard__table th {
   background-color: #333;
-  font-weight: 600;
   color: var(--clr-text-secondary);
-  text-transform: uppercase;
-  font-size: 0.9rem;
 }
 
 .dashboard__table tr:nth-child(even) {
@@ -1254,28 +1293,19 @@ a:active {
 }
 
 .error-title {
-  font-family: var(--ff-heading);
-  font-size: clamp(6rem, 20vw, 12rem);
-  font-weight: 900;
   color: var(--clr-bg-secondary);
   margin-bottom: var(--space-400);
-  line-height: 1;
   text-shadow: 2px 2px 4px rgb(0 0 0 / 30%);
 }
 
 .error-message {
-  font-family: var(--ff-base);
-  font-size: var(--fs-400);
   color: var(--clr-text-primary);
   margin-bottom: var(--space-400);
 }
 
 .error-submessage {
-  font-family: var(--ff-accent);
-  font-size: var(--fs-300);
   color: var(--clr-text-primary);
   margin-bottom: var(--space-700);
-  font-style: italic;
 }
 
 .error-btn {
@@ -1295,7 +1325,7 @@ a:active {
 
   .nav__list {
     display: flex;
-    font-weight: 400;
+    font-family: var(--ff-base);
     gap: var(--space-500);
   }
 
@@ -1337,12 +1367,7 @@ a:active {
 
   .hero__description {
     text-shadow: none;
-    font-style: italic;
     font-weight: 100;
-  }
-
-  .hero__headline {
-    font-size: var(--fs-500);
   }
 
   .section__header {
@@ -1357,12 +1382,6 @@ a:active {
 
   .contact__form {
     max-width: 100%;
-  }
-}
-
-@media (width >= 768px) and (width <= 1199px) {
-  .hero__description {
-    font-weight: 700;
   }
 }
 
