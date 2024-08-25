@@ -25,7 +25,7 @@ router.get("/allowed-emails", dashboardController.getAllowedEmails);
 router.post(
   "/allowed-emails",
   restrictTo("admin"),
-  validate(schemas.allowedEmail),
+  validate(schemas.allowedEmailWithRole),
   dashboardController.addAllowedEmail
 );
 router.delete(

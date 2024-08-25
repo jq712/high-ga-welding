@@ -10,15 +10,7 @@ const validate = (schema) => (req, res, next) => {
     const errorMessage = error.details
       .map((detail) => detail.message)
       .join(", ");
-    if (error.details.some((detail) => detail.path[0] === "password")) {
-      return next(
-        new AppError(
-          `Password does not meet requirements: ${errorMessage}`,
-          400
-        )
-      );
-    }
-    return next(new AppError(`Validation error: ${errorMessage}`, 400));
+    return next(new AppError(errorMessage, 400));
   }
   next();
 };
@@ -46,6 +38,10 @@ const schemas = {
   }),
   allowedEmail: Joi.object({
     email: Joi.string().email().required(),
+  }),
+  allowedEmailWithRole: Joi.object({
+    email: Joi.string().email().required(),
+    role: Joi.string().valid('user', 'admin').required(),
   }),
 };
 

@@ -4,18 +4,15 @@ const Form = require("../models/Form");
 
 exports.addAllowedEmail = async (req, res, next) => {
   try {
-    const { email } = req.body;
-    const allowedEmail = await AllowedEmail.create({
-      email,
-      addedBy: req.session.user.id,
-    });
+    const { email, role } = req.body;
+    const allowedEmail = await AllowedEmail.create({ email, role });
     res.status(201).json({
-      status: "success",
+      status: 'success',
       data: { allowedEmail },
     });
   } catch (error) {
     if (error.code === 11000) {
-      return next(new AppError("Email already allowed", 400));
+      return next(new AppError('Email already allowed', 400));
     }
     next(new AppError(error.message, 500));
   }
@@ -23,12 +20,14 @@ exports.addAllowedEmail = async (req, res, next) => {
 
 exports.getAllowedEmails = async (req, res, next) => {
   try {
-    const allowedEmails = await AllowedEmail.find();
+    const allowedEmails = await AllowedEmail.find().select('email role addedAt');
+    console.log('Retrieved allowed emails:', allowedEmails); // Keep this for debugging
     res.status(200).json({
       status: "success",
       data: { allowedEmails },
     });
   } catch (error) {
+    console.error('Error retrieving allowed emails:', error);
     next(new AppError(error.message, 500));
   }
 };

@@ -129,6 +129,7 @@ async function handleLogin(event) {
     showCustomAlert('An error occurred during login');
   }
 }
+
 async function handleRegister(event) {
   event.preventDefault();
   console.log('Register form submitted');
@@ -299,6 +300,7 @@ function updateAllowedEmailsTable(emails) {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${email.email || ""}</td>
+      <td>${email.role || "N/A"}</td>
       <td>${email.addedAt ? new Date(email.addedAt).toLocaleString() : ""}</td>
       <td>
         <button class="dashboard__button dashboard__button--delete delete-email" data-id="${
@@ -318,8 +320,40 @@ async function loadMessages() {
 
 // Load allowed emails for dashboard
 async function loadAllowedEmails() {
-  const emails = await fetchAllowedEmails();
-  updateAllowedEmailsTable(emails);
+  console.log('loadAllowedEmails function called');
+  try {
+    const response = await fetch('/api/dashboard/allowed-emails');
+    const data = await response.json();
+    console.log('Received allowed emails data:', data);
+    
+    const tableBody = document.querySelector('#allowedEmailsTable tbody');
+    if (!tableBody) {
+      console.error('Allowed emails table body not found');
+      return;
+    }
+
+    tableBody.innerHTML = ''; // Clear existing rows
+
+    if (data.status === 'success' && Array.isArray(data.data.allowedEmails)) {
+      data.data.allowedEmails.forEach(email => {
+        console.log('Processing email:', email);
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${email.email || ''}</td>
+          <td>${email.role || 'N/A'}</td>
+          <td>${email.addedAt ? new Date(email.addedAt).toLocaleString() : ''}</td>
+          <td>
+            <button class="dashboard__button dashboard__button--delete delete-email" data-id="${email._id || ''}">Delete</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+    } else {
+      console.error('Unexpected data format:', data);
+    }
+  } catch (error) {
+    console.error('Error loading allowed emails:', error);
+  }
 }
 
 // Delete a single message
@@ -373,12 +407,12 @@ async function deleteAllowedEmail(emailId) {
 }
 
 // Add a new allowed email
-async function addAllowedEmail(email) {
+async function addAllowedEmail(email, role) {
   try {
     const response = await fetch("/api/dashboard/allowed-emails", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email, role }),
     });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -474,24 +508,30 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Add email form submission
-    const addEmailForm = document.querySelector("#addEmailForm");
-    if (addEmailForm) {
-      addEmailForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-        const emailInput = document.querySelector("#newEmail");
-        const email = emailInput.value.trim();
-        if (email) {
-          try {
-            await addAllowedEmail(email);
-            emailInput.value = "";
-            await loadAllowedEmails();
-          } catch (error) {
-            console.error("Failed to add email:", error);
-          }
+    document.getElementById('addEmailForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('newEmail').value;
+      const role = document.getElementById('newRole').value;
+      try {
+        const response = await fetch('/api/dashboard/allowed-emails', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, role }),
+          credentials: 'include',
+        });
+        if (response.ok) {
+          await loadAllowedEmails();
+          document.getElementById('newEmail').value = '';
+          document.getElementById('newRole').value = 'user';
+        } else {
+          const error = await response.json();
+          alert(error.message);
         }
-      });
-    }
-
+      } catch (error) {
+        console.error('Error adding allowed email:', error);
+        alert('An error occurred while adding the email.');
+      }
+    });
     // Delete all messages button
     const deleteAllMessagesButton = document.getElementById("deleteAllMessages");
     if (deleteAllMessagesButton) {
@@ -513,4 +553,7 @@ document.addEventListener("DOMContentLoaded", () => {
       logoutButton.addEventListener("click", handleLogout);
     }
   }
+
+  // Load allowed emails for all pages (if needed)
+  loadAllowedEmails();
 });

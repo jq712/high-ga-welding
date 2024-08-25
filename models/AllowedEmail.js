@@ -8,12 +8,10 @@ const allowedEmailSchema = new mongoose.Schema({
     lowercase: true,
     trim: true,
   },
-  addedBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: function () {
-      return this.addedBy !== undefined;
-    }, // Only required if provided
+  role: {
+    type: String,
+    enum: ["user", "admin"],
+    required: true,
   },
   addedAt: {
     type: Date,

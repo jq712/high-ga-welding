@@ -1,49 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>High Georgia Welding Dashboard | Access Exclusive Resources</title>
-    <meta name="description" content="Secure dashboard for High Georgia Welding clients. View messages, access exclusive resources, and manage your account settings.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="./styles.css">
+    <meta
+      name="description"
+      content="Secure dashboard for High Georgia Welding clients. View messages, access exclusive resources, and manage your account settings."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="./styles.css" />
   </head>
   <body>
     <div class="dashboard-container">
       <header class="dashboard__header">
-        <h1
-          id="dashboard"
-          class="dashboard__title"
-        >
-          Dashboard
-        </h1>
-        <button
-          id="logout-button"
-          class="dashboard__logout"
-        >
-          Logout
-        </button>
+        <h1 id="dashboard" class="dashboard__title">Dashboard</h1>
+        <button id="logout-button" class="dashboard__logout">Logout</button>
       </header>
 
-      <main
-        class="dashboard__content"
-        role="main"
-      >
+      <main class="dashboard__content" role="main">
         <section class="dashboard__card">
-          <h2
-            id="messages"
-            class="dashboard__card-title"
-          >
-            Messages
-          </h2>
+          <h2 id="messages" class="dashboard__card-title">Messages</h2>
           <div class="dashboard__card-body">
             <div class="dashboard__table-container">
-              <table
-                id="messagesTable"
-                class="dashboard__table"
-              >
+              <table id="messagesTable" class="dashboard__table">
                 <thead>
                   <tr>
                     <th>Name</th>
@@ -80,21 +65,16 @@
         </section>
 
         <section class="dashboard__card">
-          <h2
-            id="allowed-emails"
-            class="dashboard__card-title"
-          >
+          <h2 id="allowed-emails" class="dashboard__card-title">
             Allowed Emails
           </h2>
           <div class="dashboard__card-body">
             <div class="dashboard__table-container">
-              <table
-                id="allowedEmailsTable"
-                class="dashboard__table"
-              >
+              <table id="allowedEmailsTable" class="dashboard__table">
                 <thead>
                   <tr>
                     <th>Email</th>
+                    <th>Role</th>
                     <th>Added At</th>
                     <th>Actions</th>
                   </tr>
@@ -115,24 +95,23 @@
             </div>
           </div>
           <div class="dashboard__card-footer">
-            <form
-              id="addEmailForm"
-              class="dashboard__form-group"
-            >
-              <input
-                type="email"
-                id="newEmail"
-                name="email"
-                required
-                placeholder="Enter email to allow"
-                class="dashboard__input"
-              />
-              <button
-                type="submit"
-                class="dashboard__button"
-              >
-                Add Email
-              </button>
+            <form id="addEmailForm" class="dashboard__form">
+              <div class="dashboard__form-group">
+                <input
+                  type="email"
+                  id="newEmail"
+                  class="dashboard__input"
+                  placeholder="Enter email"
+                  required
+                />
+                <select id="newRole" class="dashboard__input" required>
+                  <option value="user">User</option>
+                  <option value="admin">Admin</option>
+                </select>
+                <button type="submit" class="dashboard__button">
+                  Add Email
+                </button>
+              </div>
             </form>
           </div>
         </section>
