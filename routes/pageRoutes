@@ -1,7 +1,7 @@
 const express = require("express");
 const path = require("path");
 const pageRoutes = express.Router();
-const { authenticateSession } = require("../middleware/authMiddleware");
+const { authenticateSession, restrictTo } = require("../middleware/authMiddleware");
 
 const pages = [
   "index",
@@ -13,7 +13,7 @@ const pages = [
 ];
 
 pageRoutes.use((req, res, next) => {
-  if (req.path.startsWith("/dashboard") && !req.session.user) {
+  if ((req.path.startsWith("/dashboard") || req.path.startsWith("/allowed-emails")) && !req.session.user) {
     return res.redirect("/login");
   }
   next();
@@ -24,6 +24,10 @@ pageRoutes.get("/dashboard", authenticateSession, (req, res) => {
     return res.redirect("/login");
   }
   res.sendFile(path.join(__dirname, "..", "public", "dashboard.html"));
+});
+
+pageRoutes.get("/allowed-emails", authenticateSession, restrictTo("admin"), (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "public", "allowed-emails.html"));
 });
 
 pageRoutes.get("/", (req, res) => {

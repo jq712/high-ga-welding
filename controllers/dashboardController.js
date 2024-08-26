@@ -37,7 +37,6 @@ exports.addAllowedEmail = async (req, res, next) => {
 exports.getAllowedEmails = async (req, res, next) => {
   try {
     const allowedEmails = await AllowedEmail.find().select('email role addedAt');
-    console.log('Retrieved allowed emails:', allowedEmails); // Keep this for debugging
     res.status(200).json({ status: "success", data: { allowedEmails } });
   } catch (error) {
     handleError(error, next);
@@ -62,29 +61,51 @@ exports.deleteAllowedEmail = async (req, res, next) => {
 
 exports.getMessages = async (req, res, next) => {
   try {
-    const messages = await Form.find();
+    const messages = await Form.find().sort({ createdAt: -1 });
     res.status(200).json({ status: "success", data: { messages } });
   } catch (error) {
     handleError(error, next);
   }
 };
 
-exports.deleteMessage = async (req, res, next) => {
+exports.deleteMessage = async (req, res) => {
   try {
-    const message = await Form.findByIdAndDelete(req.params.id);
-    if (!message) {
-      return next(new AppError("Message not found", 404));
+    const { id } = req.params;
+    console.log(`Received delete request for message ID: ${id}`);
+
+    if (!id || id === 'undefined') {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Invalid message ID provided'
+      });
     }
-    res.status(200).json({ status: "success", message: "Message deleted successfully" });
+
+    const deletedMessage = await Form.findByIdAndDelete(id);
+
+    if (!deletedMessage) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Message not found'
+      });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: null
+    });
   } catch (error) {
-    handleError(error, next);
+    console.error('Error in deleteMessage:', error);
+    res.status(500).json({
+      status: 'error',
+      message: error.message
+    });
   }
 };
 
 exports.deleteAllMessages = async (req, res, next) => {
   try {
     await Form.deleteMany();
-    res.status(204).json({ status: "success", data: null });
+    res.status(200).json({ status: "success", message: "All messages deleted successfully" });
   } catch (error) {
     handleError(error, next);
   }

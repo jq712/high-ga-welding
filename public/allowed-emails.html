@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>High Georgia Welding Dashboard | Access Exclusive Resources</title>
+    <title>High Georgia Welding - Allowed Emails</title>
     <meta
       name="description"
-      content="Secure dashboard for High Georgia Welding clients. View messages, access exclusive resources, and manage your account settings."
+      content="Manage allowed emails for High Georgia Welding client access."
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,9 +20,9 @@
     <div class="dashboard-container">
       <header class="dashboard__header">
         <nav class="dashboard__nav">
-          <h1 id="dashboard" class="dashboard__title">Dashboard</h1>
+          <h1 id="allowed-emails" class="dashboard__title">Allowed Emails</h1>
           <div class="dashboard__nav-actions">
-            <a href="/allowed-emails" class="dashboard__link">Manage Emails</a>
+            <a href="/dashboard" class="dashboard__link">Back to Dashboard</a>
             <button
               id="logout-button"
               class="dashboard__button dashboard__button--logout"
@@ -34,31 +34,39 @@
       </header>
 
       <main class="dashboard__content" role="main">
-        <section id="messages-section" class="dashboard__section active">
-          <h2 id="messages" class="dashboard__section-title">Messages</h2>
+        <section id="allowed-emails-section" class="dashboard__section active">
+          <h2 class="dashboard__section-title">Manage Allowed Emails</h2>
           <div class="dashboard__table-container">
-            <table id="messagesTable" class="dashboard__table">
+            <table id="allowedEmailsTable" class="dashboard__table">
               <thead>
                 <tr>
-                  <th>Name</th>
                   <th>Email</th>
-                  <th>Phone</th>
-                  <th>Message</th>
-                  <th>Date</th>
+                  <th>Role</th>
+                  <th>Added At</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                <!-- Messages will be dynamically inserted here -->
+                <!-- Allowed emails will be dynamically inserted here -->
               </tbody>
             </table>
           </div>
-          <button
-            id="deleteAllMessages"
-            class="dashboard__button dashboard__button--delete"
-          >
-            Delete All Messages
-          </button>
+          <form id="addEmailForm" class="dashboard__form">
+            <div class="dashboard__form-group">
+              <input
+                type="email"
+                id="newEmail"
+                class="dashboard__input"
+                placeholder="Enter email"
+                required
+              />
+              <select id="newRole" class="dashboard__input" required>
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+              </select>
+              <button type="submit" class="dashboard__button">Add Email</button>
+            </div>
+          </form>
         </section>
       </main>
     </div>
