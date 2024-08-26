@@ -916,6 +916,57 @@ a:active {
   }
 }
 
+/* Certifications Page Styles */
+.certifications {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.certifications__container {
+  width: min(95%, 1000px);
+  margin: 100px auto;
+  padding: var(--space-600);
+  border-radius: var(--border-radius);
+  box-shadow: 0 0 20px rgb(0 0 0 / 50%);
+}
+
+.certifications__title {
+  font-size: var(--fs-600);
+  font-weight: 600;
+  margin-bottom: var(--space-600);
+  text-align: center;
+  color: var(--clr-text-primary);
+}
+
+.certifications__text {
+  font-size: var(--fs-300);
+  margin-bottom: var(--space-600);
+  text-align: center;
+  color: var(--clr-text-secondary);
+}
+
+.certifications__button {
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+@media (width >= 768px) {
+  .certifications__container {
+    padding: var(--space-800);
+  }
+
+  .certifications__title {
+    font-size: var(--fs-700);
+  }
+
+  .certifications__text {
+    font-size: var(--fs-400);
+  }
+}
+
 /* Login Styles */
 .login {
   background: var(--clr-bg-primary);
