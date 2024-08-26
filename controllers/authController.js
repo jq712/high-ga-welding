@@ -3,6 +3,18 @@ const AllowedEmail = require("../models/AllowedEmail");
 const { AppError } = require("../middleware/errorHandler");
 const bcrypt = require("bcryptjs");
 
+const createUserResponse = (user) => ({
+  status: 'success',
+  data: {
+    user: {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+      isAdmin: user.isAdmin,
+    },
+  },
+});
+
 exports.register = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -16,17 +28,7 @@ exports.register = async (req, res, next) => {
       role: allowedEmail.role,
       isAdmin: allowedEmail.role === 'admin'
     });
-    res.status(201).json({
-      status: 'success',
-      data: {
-        user: {
-          id: user._id,
-          email: user.email,
-          role: user.role,
-          isAdmin: user.isAdmin,
-        },
-      },
-    });
+    res.status(201).json(createUserResponse(user));
   } catch (error) {
     if (error.code === 11000) {
       return next(new AppError('Email already in use', 400));
@@ -34,6 +36,7 @@ exports.register = async (req, res, next) => {
     next(new AppError(error.message, 500));
   }
 };
+
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -45,15 +48,8 @@ exports.login = async (req, res, next) => {
 
     const user = await User.findOne({ email }).select("+password");
 
-    if (!user) {
-      console.log(`❌ Login failed: No user found (${email})`);
-      return next(new AppError("Incorrect email or password", 401));
-    }
-
-    const isPasswordCorrect = await bcrypt.compare(password, user.password);
-
-    if (!isPasswordCorrect) {
-      console.log(`❌ Login failed: Incorrect password (${email})`);
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      console.log(`❌ Login failed: Incorrect credentials (${email})`);
       return next(new AppError("Incorrect email or password", 401));
     }
 
@@ -64,21 +60,8 @@ exports.login = async (req, res, next) => {
       isAdmin: user.isAdmin,
     };
 
-    console.log(
-      `✅ Login successful: ${email} (${user.role}, Admin: ${user.isAdmin})`
-    );
-
-    res.status(200).json({
-      status: "success",
-      data: {
-        user: {
-          id: user._id,
-          email: user.email,
-          role: user.role,
-          isAdmin: user.isAdmin,
-        },
-      },
-    });
+    console.log(`✅ Login successful: ${email} (${user.role}, Admin: ${user.isAdmin})`);
+    res.status(200).json(createUserResponse(user));
   } catch (error) {
     console.error("❌ Login error:", error.message);
     next(new AppError(error.message, 500));

@@ -2,33 +2,25 @@ const User = require("./models/Users");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
 
-const ADMIN_EMAIL = "712.jordanq@gmail.com";
-const ADMIN_PASSWORD = "Strongpassword14!";
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 async function createInitialAdmin() {
   try {
-    let adminUser = await User.findOne({ email: ADMIN_EMAIL });
-    if (adminUser) {
-      console.log("👤 Admin user already exists. Updating...");
-    } else {
-      console.log("👤 Creating new admin user...");
-      adminUser = new User({
+    const adminUser = await User.findOneAndUpdate(
+      { email: ADMIN_EMAIL },
+      {
         email: ADMIN_EMAIL,
         role: "admin",
         isAdmin: true,
-      });
-    }
-
-    // Always set the password
-    adminUser.password = ADMIN_PASSWORD;
-
-    await adminUser.save();
-    console.log(
-      `✅ Admin user ${adminUser.isNew ? "created" : "updated"} successfully`
+        password: ADMIN_PASSWORD
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true, runValidators: true }
     );
-    console.log(
-      `📊 Admin: ${adminUser.email} (${adminUser.role}, Admin: ${adminUser.isAdmin})`
-    );
+
+    const action = adminUser.isNew ? "created" : "updated";
+    console.log(`✅ Admin user ${action} successfully`);
+    console.log(`📊 Admin: ${adminUser.email} (${adminUser.role}, Admin: ${adminUser.isAdmin})`);
 
     return adminUser;
   } catch (error) {
@@ -37,4 +29,4 @@ async function createInitialAdmin() {
   }
 }
 
-module.exports = { createInitialAdmin, ADMIN_EMAIL, ADMIN_PASSWORD };
+module.exports = { createInitialAdmin };

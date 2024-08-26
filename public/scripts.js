@@ -18,6 +18,23 @@ if (hamburgerMenu && dropdownMenu) {
   });
 }
 
+// API helper
+const apiCall = async (url, method = 'GET', data = null) => {
+  const options = {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  };
+  if (data) options.body = JSON.stringify(data);
+  const response = await fetch(url, options);
+  if (!response.ok) {
+    console.error(`API call failed: ${method} ${url}`, response);
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+};
+
+// UI components
 function showCustomAlert(message, onConfirm) {
   console.log('Showing custom alert:', message);
   const modal = document.createElement('div');
@@ -64,7 +81,7 @@ function showCustomAlert(message, onConfirm) {
   console.log('Custom alert created and appended to body');
 }
 
-// Handle form submission
+// Event handlers
 async function handleFormSubmit(event, formId, apiEndpoint) {
   event.preventDefault();
   const form = document.getElementById(formId);
@@ -72,159 +89,117 @@ async function handleFormSubmit(event, formId, apiEndpoint) {
   const data = Object.fromEntries(formData.entries());
 
   try {
-    const response = await fetch(apiEndpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-      credentials: "include",
-    });
-
-    if (response.ok) {
-      const result = await response.json();
-      console.log("Success:", result);
-      form.reset();
-      showCustomAlert("Form submitted successfully!");
-    } else {
-      const errorData = await response.json();
-      console.error("Error:", errorData);
-      showCustomAlert(errorData.message || "An error occurred. Please try again.");
-    }
+    const result = await apiCall(apiEndpoint, 'POST', data);
+    console.log("Success:", result);
+    form.reset();
+    showCustomAlert("Form submitted successfully!");
   } catch (error) {
     console.error("Error:", error);
-    showCustomAlert("An unexpected error occurred. Please try again.");
+    showCustomAlert(error.message || "An error occurred. Please try again.");
   }
 }
 
-// Handle login
 async function handleLogin(event) {
   event.preventDefault();
-  console.log('Login form submitted');
-
   const email = document.querySelector('#email').value;
   const password = document.querySelector('#password').value;
 
   try {
-    const response = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    console.log('Login response status:', response.status);
-
-    const data = await response.json();
-    console.log('Login response data:', data);
-
-    if (response.ok) {
-      console.log('Login successful');
-      window.location.href = '/dashboard';
-    } else {
-      console.error('Login failed:', data.message);
-      showCustomAlert(data.message);
-    }
+    const data = await apiCall('/api/auth/login', 'POST', { email, password });
+    console.log('Login successful');
+    window.location.href = '/dashboard';
   } catch (error) {
-    console.error('Error during login:', error);
-    showCustomAlert('An error occurred during login');
+    console.error('Login failed:', error.message);
+    showCustomAlert(error.message);
   }
 }
 
 async function handleRegister(event) {
   event.preventDefault();
-  console.log('Register form submitted');
-
   const form = event.target;
   const email = form.querySelector('#email').value;
   const password = form.querySelector('#password').value;
   const confirmPassword = form.querySelector('#confirm-password').value;
 
   if (password !== confirmPassword) {
-    console.log('Passwords do not match');
     alert('Passwords do not match');
     return;
   }
 
   try {
-    console.log('Sending registration request');
-    const response = await fetch('/api/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log('Register response data:', data);
-
+    const data = await apiCall('/api/auth/register', 'POST', { email, password });
     if (data.status === 'success') {
-      console.log('Registration successful');
       alert('Registration successful! Please log in.');
       window.location.href = './login.html';
     } else {
-      console.error('Registration failed:', data.message);
       alert(data.message || 'Registration failed. Please try again.');
     }
   } catch (error) {
-    console.error('Error during registration:', error);
     alert(`An error occurred during registration: ${error.message}. Please try again.`);
   }
 }
 
-// Toggle password visibility
 function togglePasswordVisibility() {
   const passwordInput = document.getElementById("password");
   const toggleButton = document.querySelector(".login__password-toggle");
-  if (passwordInput.type === "password") {
-    passwordInput.type = "text";
-    toggleButton.textContent = "🙈";
-  } else {
-    passwordInput.type = "password";
-    toggleButton.textContent = "👀";
-  }
+  passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+  toggleButton.textContent = passwordInput.type === "password" ? "👀" : "🙈";
 }
 
-// Handle logout
-function handleLogout() {
-  fetch("/api/auth/logout", {
-    method: "POST",
-    credentials: "include",
-  })
-    .then((response) => {
-      if (response.ok) {
-        window.location.href = "/login.html";
-      } else {
-        throw new Error("Logout failed");
-      }
-    })
-    .catch((error) => {
-      console.error("Logout error:", error);
-      showCustomAlert("An error occurred during logout. Please try again.");
-    });
-}
-
-// Fetch messages for dashboard
-async function fetchMessages() {
+async function handleLogout() {
   try {
-    const response = await fetch("/api/dashboard/messages");
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    console.log("Fetched messages data:", data);
-    if (Array.isArray(data.data.messages)) {
-      return data.data.messages;
-    }
-    return [];
+    await apiCall("/api/auth/logout", "POST");
+    window.location.href = "/login.html";
   } catch (error) {
-    console.error("Error fetching messages:", error);
-    return [];
+    console.error("Logout error:", error);
+    showCustomAlert("An error occurred during logout. Please try again.");
   }
+}
+
+// Dashboard functions
+async function loadMessages() {
+  try {
+    const response = await apiCall("/api/dashboard/messages");
+    if (response.status === "success" && response.data && response.data.messages) {
+      updateMessagesTable(response.data.messages);
+    } else {
+      console.error("Unexpected response format:", response);
+      showCustomAlert("Failed to load messages. Unexpected response format.");
+    }
+  } catch (error) {
+    console.error("Error loading messages:", error);
+    showCustomAlert("Failed to load messages. Please try again.");
+  }
+}
+
+async function loadAllowedEmails() {
+  const data = await apiCall('/api/dashboard/allowed-emails');
+  updateAllowedEmailsTable(data.data.allowedEmails);
+}
+
+async function deleteMessage(messageId) {
+  await apiCall(`/api/dashboard/messages/${messageId}`, "DELETE");
+}
+
+async function deleteAllMessages() {
+  await apiCall("/api/dashboard/messages", "DELETE");
+}
+
+async function deleteAllowedEmail(emailId) {
+  try {
+    const response = await apiCall(`/api/dashboard/allowed-emails/${emailId}`, "DELETE");
+    if (!response) {
+      throw new Error('Empty response received');
+    }
+    return response;
+  } catch (error) {
+    console.error('Error in deleteAllowedEmail:', error);
+    throw error;
+  }
+}
+
+async function addAllowedEmail(email, role) {
+  await apiCall("/api/dashboard/allowed-emails", "POST", { email, role });
 }
 
 // Update messages table in dashboard
@@ -235,49 +210,21 @@ function updateMessagesTable(messages) {
     return;
   }
 
-  console.log("Updating messages table with:", messages);
-
-  if (!Array.isArray(messages)) {
-    console.error("Messages is not an array:", messages);
-    return;
-  }
-
   tableBody.innerHTML = "";
   messages.forEach((message) => {
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${message.name || ""}</td>
       <td>${message.email || ""}</td>
+      <td>${message.phone || ""}</td>
       <td>${message.message || ""}</td>
-      <td>${
-        message.createdAt ? new Date(message.createdAt).toLocaleString() : ""
-      }</td>
+      <td>${message.submittedAt ? new Date(message.submittedAt).toLocaleString() : ""}</td>
       <td>
-        <button class="dashboard__button dashboard__button--delete delete-message" data-id="${
-          message._id || ""
-        }">Delete</button>
+        <button class="dashboard__button dashboard__button--delete delete-message" data-id="${message._id || ""}">Delete</button>
       </td>
     `;
     tableBody.appendChild(row);
   });
-}
-
-// Fetch allowed emails for dashboard
-async function fetchAllowedEmails() {
-  try {
-    const response = await fetch("/api/dashboard/allowed-emails");
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    console.log("Fetched allowed emails data:", data);
-    return Array.isArray(data.data.allowedEmails)
-      ? data.data.allowedEmails
-      : [];
-  } catch (error) {
-    console.error("Error fetching allowed emails:", error);
-    return [];
-  }
 }
 
 // Update allowed emails table in dashboard
@@ -285,13 +232,6 @@ function updateAllowedEmailsTable(emails) {
   const tableBody = document.querySelector("#allowedEmailsTable tbody");
   if (!tableBody) {
     console.error("Allowed emails table body not found");
-    return;
-  }
-
-  console.log("Updating allowed emails table with:", emails);
-
-  if (!Array.isArray(emails)) {
-    console.error("Emails is not an array:", emails);
     return;
   }
 
@@ -303,165 +243,37 @@ function updateAllowedEmailsTable(emails) {
       <td>${email.role || "N/A"}</td>
       <td>${email.addedAt ? new Date(email.addedAt).toLocaleString() : ""}</td>
       <td>
-        <button class="dashboard__button dashboard__button--delete delete-email" data-id="${
-          email._id || ""
-        }">Delete</button>
+        <button class="dashboard__button dashboard__button--delete delete-email" data-id="${email._id || ""}">Delete</button>
       </td>
     `;
     tableBody.appendChild(row);
   });
 }
 
-// Load messages for dashboard
-async function loadMessages() {
-  const messages = await fetchMessages();
-  updateMessagesTable(messages);
-}
-
-// Load allowed emails for dashboard
-async function loadAllowedEmails() {
-  console.log('loadAllowedEmails function called');
-  try {
-    const response = await fetch('/api/dashboard/allowed-emails');
-    const data = await response.json();
-    console.log('Received allowed emails data:', data);
-    
-    const tableBody = document.querySelector('#allowedEmailsTable tbody');
-    if (!tableBody) {
-      console.error('Allowed emails table body not found');
-      return;
-    }
-
-    tableBody.innerHTML = ''; // Clear existing rows
-
-    if (data.status === 'success' && Array.isArray(data.data.allowedEmails)) {
-      data.data.allowedEmails.forEach(email => {
-        console.log('Processing email:', email);
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${email.email || ''}</td>
-          <td>${email.role || 'N/A'}</td>
-          <td>${email.addedAt ? new Date(email.addedAt).toLocaleString() : ''}</td>
-          <td>
-            <button class="dashboard__button dashboard__button--delete delete-email" data-id="${email._id || ''}">Delete</button>
-          </td>
-        `;
-        tableBody.appendChild(row);
-      });
-    } else {
-      console.error('Unexpected data format:', data);
-    }
-  } catch (error) {
-    console.error('Error loading allowed emails:', error);
-  }
-}
-
-// Delete a single message
-async function deleteMessage(messageId) {
-  try {
-    const response = await fetch(`/api/dashboard/messages/${messageId}`, {
-      method: "DELETE",
-      credentials: "include",
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return true;
-  } catch (error) {
-    console.error("Error deleting message:", error);
-    throw error;
-  }
-}
-
-// Delete all messages
-async function deleteAllMessages() {
-  try {
-    const response = await fetch("/api/dashboard/messages", {
-      method: "DELETE",
-      credentials: "include",
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return true;
-  } catch (error) {
-    console.error("Error deleting all messages:", error);
-    throw error;
-  }
-}
-
-// Delete an allowed email
-async function deleteAllowedEmail(emailId) {
-  try {
-    const response = await fetch(`/api/dashboard/allowed-emails/${emailId}`, {
-      method: "DELETE",
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return true;
-  } catch (error) {
-    console.error("Error deleting allowed email:", error);
-    throw error;
-  }
-}
-
-// Add a new allowed email
-async function addAllowedEmail(email, role) {
-  try {
-    const response = await fetch("/api/dashboard/allowed-emails", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, role }),
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error("Error adding allowed email:", error);
-    throw error;
-  }
-}
-
 // Event listeners
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("DOM fully loaded and parsed");
-
-  // Contact form submission
   const contactForm = document.getElementById("contactForm");
   if (contactForm) {
-    contactForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      await handleFormSubmit(event, "contactForm", "/api/forms/");
-    });
+    contactForm.addEventListener("submit", (event) => handleFormSubmit(event, "contactForm", "/api/forms/"));
   }
 
-  // Login form submission
   const loginForm = document.getElementById("login-form");
   if (loginForm) {
     loginForm.addEventListener("submit", handleLogin);
-
-    // Add event listener for password visibility toggle
     const toggleButton = document.querySelector(".login__password-toggle");
     if (toggleButton) {
       toggleButton.addEventListener("click", togglePasswordVisibility);
     }
   }
 
-  // Register form submission
   const registerForm = document.getElementById("register-form");
   if (registerForm) {
     registerForm.addEventListener("submit", handleRegister);
   }
 
-  // Dashboard functionality
   if (window.location.pathname === "/dashboard") {
     if (document.getElementById("messagesTable")) {
-      console.log("Messages table found, loading messages");
       loadMessages();
-
-      // Use event delegation for delete message buttons
       const messagesTable = document.getElementById("messagesTable");
       if (messagesTable) {
         messagesTable.addEventListener("click", async (event) => {
@@ -478,15 +290,10 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
       }
-    } else {
-      console.log("Messages table not found on this page");
     }
 
     if (document.getElementById("allowedEmailsTable")) {
-      console.log("Allowed emails table found, loading emails");
       loadAllowedEmails();
-
-      // Use event delegation for delete email buttons
       const allowedEmailsTable = document.getElementById("allowedEmailsTable");
       if (allowedEmailsTable) {
         allowedEmailsTable.addEventListener("click", async (event) => {
@@ -498,41 +305,32 @@ document.addEventListener("DOMContentLoaded", () => {
                 await loadAllowedEmails();
               } catch (error) {
                 console.error("Failed to delete email:", error);
+                showCustomAlert(`Failed to delete email: ${error.message}`);
               }
             }
           }
         });
       }
-    } else {
-      console.log("Allowed emails table not found on this page");
     }
 
-    // Add email form submission
-    document.getElementById('addEmailForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('newEmail').value;
-      const role = document.getElementById('newRole').value;
-      try {
-        const response = await fetch('/api/dashboard/allowed-emails', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, role }),
-          credentials: 'include',
-        });
-        if (response.ok) {
+    const addEmailForm = document.getElementById('addEmailForm');
+    if (addEmailForm) {
+      addEmailForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('newEmail').value;
+        const role = document.getElementById('newRole').value;
+        try {
+          await addAllowedEmail(email, role);
           await loadAllowedEmails();
           document.getElementById('newEmail').value = '';
           document.getElementById('newRole').value = 'user';
-        } else {
-          const error = await response.json();
-          alert(error.message);
+        } catch (error) {
+          console.error('Error adding allowed email:', error);
+          alert('An error occurred while adding the email.');
         }
-      } catch (error) {
-        console.error('Error adding allowed email:', error);
-        alert('An error occurred while adding the email.');
-      }
-    });
-    // Delete all messages button
+      });
+    }
+
     const deleteAllMessagesButton = document.getElementById("deleteAllMessages");
     if (deleteAllMessagesButton) {
       deleteAllMessagesButton.addEventListener("click", async () => {
@@ -547,13 +345,9 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // Logout button
     const logoutButton = document.getElementById("logout-button");
     if (logoutButton) {
       logoutButton.addEventListener("click", handleLogout);
     }
   }
-
-  // Load allowed emails for all pages (if needed)
-  loadAllowedEmails();
 });
