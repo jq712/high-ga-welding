@@ -1,6 +1,7 @@
 const { AppError } = require("../middleware/errorHandler");
 const AllowedEmail = require("../models/AllowedEmail");
 const Form = require("../models/Form");
+const User = require("../models/Users"); 
 
 exports.addAllowedEmail = async (req, res, next) => {
   try {
@@ -34,10 +35,17 @@ exports.getAllowedEmails = async (req, res, next) => {
 
 exports.deleteAllowedEmail = async (req, res, next) => {
   try {
-    const allowedEmail = await AllowedEmail.findByIdAndDelete(req.params.id);
+    const allowedEmail = await AllowedEmail.findById(req.params.id);
     if (!allowedEmail) {
       return next(new AppError("Allowed email not found", 404));
     }
+
+    // Delete the associated user if exists
+    await deleteAssociatedUser(allowedEmail.email);
+
+    // Delete the allowed email
+    await AllowedEmail.findByIdAndDelete(req.params.id);
+
     res.status(204).json({
       status: "success",
       data: null,
@@ -46,6 +54,18 @@ exports.deleteAllowedEmail = async (req, res, next) => {
     next(new AppError(error.message, 500));
   }
 };
+
+// Helper function to delete associated user
+async function deleteAssociatedUser(email) {
+  try {
+    const deletedUser = await User.findOneAndDelete({ email });
+    if (deletedUser) {
+      console.log(`Associated user with email ${email} has been deleted.`);
+    }
+  } catch (error) {
+    console.error(`Error deleting associated user: ${error.message}`);
+  }
+}
 
 exports.getMessages = async (req, res, next) => {
   try {
