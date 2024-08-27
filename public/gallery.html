@@ -14,33 +14,55 @@
   </head>
   <body>
     <header class="header glassmorphism">
-      <h1 class="header__company-name">HIGH GEORGIA WELDING</h1>
+      <span class="header__company-name">HIGH GEORGIA WELDING</span>
       <nav class="nav">
         <ul class="nav__list">
-          <li><a href="index.html" class="nav__link">Home</a></li>
-          <li><a href="about.html" class="nav__link">About</a></li>
-          <li><a href="gallery.html" class="nav__link">Gallery</a></li>
+          <li>
+            <a href="index.html" class="nav__link">Home</a>
+          </li>
+          <li>
+            <a href="about.html" class="nav__link">About</a>
+          </li>
+          <li>
+            <a href="gallery.html" class="nav__link">Gallery</a>
+          </li>
           <li>
             <a href="certifications.html" class="nav__link">Certifications</a>
           </li>
-          <li><a href="contact.html" class="nav__link">Contact</a></li>
+          <li>
+            <a href="contact.html" class="nav__link">Contact</a>
+          </li>
         </ul>
+        <button class="nav__hamburger nav__hamburger--spin">
+          <span class="nav__hamburger-box">
+            <span class="nav__hamburger-inner"></span>
+          </span>
+        </button>
+        <div class="nav__dropdown glassmorphism">
+          <ul class="nav__dropdown-list">
+            <li>
+              <a href="index.html" class="nav__dropdown-link">Home</a>
+            </li>
+            <li>
+              <a href="about.html" class="nav__dropdown-link">About</a>
+            </li>
+            <li>
+              <a href="gallery.html" class="nav__dropdown-link">Gallery</a>
+            </li>
+            <li>
+              <a href="certifications.html" class="nav__dropdown-link"
+                >Certifications</a
+              >
+            </li>
+            <li>
+              <a href="contact.html" class="nav__dropdown-link">Contact</a>
+            </li>
+          </ul>
+        </div>
       </nav>
-      <div class="nav__hamburger">
-        <span class="nav__hamburger-inner"></span>
-      </div>
-      <div class="nav__dropdown glassmorphism">
-        <a href="index.html" class="nav__dropdown-link">Home</a>
-        <a href="about.html" class="nav__dropdown-link">About</a>
-        <a href="gallery.html" class="nav__dropdown-link">Gallery</a>
-        <a href="certifications.html" class="nav__dropdown-link"
-          >Certifications</a
-        >
-        <a href="contact.html" class="nav__dropdown-link">Contact</a>
-      </div>
     </header>
 
-    <main class="section content-container glassmorphism gallery">
+    <main class="glassmorphism gallery">
       <h2 id="image-gallery" class="gallery__title">Image Gallery</h2>
       <div id="filter-data-btn-container" class="gallery__filters">
         <button class="filter-button active" data-filter="all">All</button>
@@ -58,5 +80,8 @@
     <footer>
       <!-- Add your footer content here -->
     </footer>
+
+    <script src="gallery.js"></script>
+    <script src="scripts.js"></script>
   </body>
 </html>

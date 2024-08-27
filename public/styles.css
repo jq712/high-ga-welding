@@ -855,7 +855,9 @@ a:active {
 .gallery {
   text-align: center;
   width: min(95%, 2000px);
-  margin: 0 auto;
+  margin: 6rem auto;
+  padding: 1rem 0;
+  border-radius: var(--border-radius);
 }
 
 .gallery__grid {

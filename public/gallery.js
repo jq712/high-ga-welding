@@ -1,21 +1,21 @@
 document.addEventListener("DOMContentLoaded", function() {
   // Array of gallery items
   const galleryItems = [
-      { href: "./images/2.jpg", title: "Image 1", description: "Description 1", category: "pipes" },
-      { href: "./images/3.jpg", title: "Image 2", description: "Description 2", category: "structural" },
-      { href: "./images/4.jpg", title: "Image 3", description: "Description 3", category: "pipes" },
-      { href: "./images/5.jpg", title: "Image 4", description: "Description 4", category: "structural" },
-      { href: "./images/6.jpg", title: "Image 5", description: "Description 5", category: "pipes" },
-      { href: "./images/7.jpg", title: "Image 6", description: "Description 6", category: "structural" },
-      { href: "./images/8.jpg", title: "Image 7", description: "Description 7", category: "pipes" },
-      { href: "./images/9.jpg", title: "Image 8", description: "Description 8", category: "structural" },
-      { href: "./images/10.jpg", title: "Image 9", description: "Description 9", category: "pipes" },
-      { href: "./images/11.jpg", title: "Image 10", description: "Description 10", category: "structural" },
-      { href: "./images/12.jpg", title: "Image 11", description: "Description 11", category: "pipes" },
-      { href: "./images/13.jpg", title: "Image 12", description: "Description 12", category: "structural" },
-      { href: "./images/14.jpg", title: "Image 13", description: "Description 13", category: "pipes" },
-      { href: "./images/15.jpg", title: "Image 14", description: "Description 14", category: "structural" },
-      { href: "./images/16.jpg", title: "Image 15", description: "Description 15", category: "pipes" },
+      { href: "./images/2.jpg", title: "Precision Stainless Steel Pipefitting", description: "High-quality stainless steel pipefitting showcasing our expertise in precision manufacturing for industrial applications.", category: "pipes" },
+      { href: "./images/3.jpg", title: "Certified Welder on Industrial Gas Line", description: "A skilled certified welder meticulously working on an industrial gas line, demonstrating our commitment to quality and safety. This welding project passed all rigorous quality tests, ensuring the highest standards of reliability for critical infrastructure.", category: "pipes" },
+      { href: "./images/4.jpg", title: "Pipe Cutting for Tie-In", description: "Carefully cutting into an existing water-filled pipeline to prepare for a tie-in, showcasing our expertise in handling complex plumbing modifications while maintaining system integrity.", category: "pipes" },
+      { href: "./images/5.jpg", title: "Reducing Flanges on Stainless Steel Pipe", description: "Reducing flanges installed on a stainless steel pipe, showcasing our expertise in custom pipefitting solutions for industrial applications.", category: "pipes" },
+      { href: "./images/6.jpg", title: "Stainless Steel Pipe Weld", description: "A close-up view of a high-quality stainless steel weld on a pipe, showcasing our precision welding techniques and attention to detail in industrial pipework.", category: "pipes" },
+      { href: "./images/7.jpg", title: "Stainless Steel Pipe Weld", description: "A close-up view of a high-quality stainless steel weld on a pipe, showcasing our precision welding techniques and attention to detail in industrial pipework.", category: "pipes" },
+      { href: "./images/8.jpg", title: "Stainless Steel Pipe Weld", description: "A close-up view of a high-quality stainless steel weld on a pipe, showcasing our precision welding techniques and attention to detail in industrial pipework.", category: "pipes" },
+      { href: "./images/9.jpg", title: "Stainless Steel pipe Assembly", description: "A complex stainless steel assembly featuring a flange welded to two reducers and a 90-degree elbow, showcasing our precision welding and pipefitting expertise in creating custom industrial components.", category: "pipes" },
+      { href: "./images/10.jpg", title: "Stainless Steel pipe Assembly", description: "A complex stainless steel assembly featuring a flange welded to two reducers and a 90-degree elbow, showcasing our precision welding and pipefitting expertise in creating custom industrial components.", category: "pipes" },
+      { href: "./images/11.jpg", title: "Stainless Steel pipe Assembly", description: "A complex stainless steel assembly featuring a flange welded to two reducers and a 90-degree elbow, showcasing our precision welding and pipefitting expertise in creating custom industrial components.", category: "pipes" },
+      { href: "./images/12.jpg", title: "Certified Welder Performing Position Weld", description: "A skilled certified welder executing a precise position weld on stainless steel pipe, demonstrating our expertise in specialized welding techniques for critical industrial applications.", category: "pipes" },
+      { href: "./images/13.jpg", title: "Certified Welder Performing Position Weld on Gas Line", description: "A skilled certified welder executing a precise position weld on a gas line, demonstrating our expertise in specialized welding techniques for critical industrial applications.", category: "pipes" },
+      { href: "./images/14.jpg", title: "Certified Welder Performing Position Weld", description: "A skilled certified welder executing a precise position weld on stainless steel pipe, demonstrating our expertise in specialized welding techniques for critical industrial applications.", category: "pipes" },
+      { href: "./images/15.jpg", title: "Certified Welder Performing Position Weld", description: "A skilled certified welder executing a precise position weld on stainless steel pipe, demonstrating our expertise in specialized welding techniques for critical industrial applications.", category: "pipes" },
+      { href: "./images/17.jpg", title: "Worker Installing Vertical Run of Pipe", description: "A skilled worker carefully installing a vertical run of pipe, demonstrating our proficiency in complex pipefitting and installation for industrial projects.", category: "pipes" },
   ];
 
   // Function to generate HTML for gallery items
