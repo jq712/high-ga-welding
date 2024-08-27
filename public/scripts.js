@@ -260,7 +260,7 @@ async function addAllowedEmail(email, role) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ email, role }),
+      body: JSON.stringify({ email, role, }),
       credentials: 'include'
     });
 
@@ -389,7 +389,7 @@ document.addEventListener("DOMContentLoaded", () => {
     registerForm.addEventListener("submit", handleRegister);
   }
 
-  if (window.location.pathname === "/dashboard" || window.location.pathname === "/allowed-emails.html") {
+  if (window.location.pathname === "/dashboard") {
     if (document.getElementById("messagesTable")) {
       loadMessages();
       const messagesTable = document.getElementById("messagesTable");
