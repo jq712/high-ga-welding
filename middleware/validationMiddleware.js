@@ -1,18 +1,21 @@
 const Joi = require("joi");
 const { AppError } = require("./errorHandler");
 
-const validate = (schema) => (req, res, next) => {
-  if (!schema) {
-    return next(new AppError("Validation schema is not defined", 500));
-  }
-  const { error } = schema.validate(req.body, { abortEarly: false });
-  if (error) {
-    const errorMessage = error.details
-      .map((detail) => detail.message)
-      .join(", ");
-    return next(new AppError(errorMessage, 400));
-  }
-  next();
+const validate = (schema) => {
+  return (req, res, next) => {
+    console.log('Validating request body:', req.body);
+    const { error } = schema.validate(req.body);
+    if (error) {
+      console.log('Validation error:', error);
+      return res.status(400).json({
+        status: 'fail',
+        message: error.details[0].message,
+        error: error.details[0]
+      });
+    }
+    console.log('Validation passed');
+    next();
+  };
 };
 
 const passwordSchema = Joi.string()
@@ -42,6 +45,10 @@ const schemas = {
   allowedEmailWithRole: Joi.object({
     email: Joi.string().email().required(),
     role: Joi.string().valid('user', 'admin').required(),
+  }),
+  addAllowedEmail: Joi.object({
+    email: Joi.string().email().required(),
+    role: Joi.string().valid('user', 'admin').required()
   }),
 };
 

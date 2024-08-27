@@ -10,8 +10,8 @@ const allowedEmailSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["user", "admin"],
     required: true,
+    enum: ["user", "admin"],
   },
   addedAt: {
     type: Date,

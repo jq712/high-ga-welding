@@ -76,7 +76,7 @@ async function handleLogin(event) {
     }
 
     const data = await response.json();
-    window.location.href = '/dashboard';
+    window.location.href = '/allowed-emails';
   } catch (error) {
     showCustomAlert(error.message);
   }
@@ -169,6 +169,7 @@ async function loadMessages() {
 }
 
 async function loadAllowedEmails() {
+  console.log("Loading allowed emails...");
   try {
     const response = await fetch('/api/dashboard/allowed-emails', {
       method: 'GET',
@@ -181,12 +182,14 @@ async function loadAllowedEmails() {
     }
 
     const data = await response.json();
+    console.log("Allowed emails data:", data);
     if (data && data.status === "success" && Array.isArray(data.data.allowedEmails)) {
       updateAllowedEmailsTable(data.data.allowedEmails);
     } else {
       updateAllowedEmailsTable([]);
     }
   } catch (error) {
+    console.error("Error loading allowed emails:", error);
     showCustomAlert("Error loading allowed emails");
     updateAllowedEmailsTable([]);
   }
@@ -254,24 +257,31 @@ async function deleteAllowedEmail(emailId) {
 }
 
 async function addAllowedEmail(email, role) {
+  console.log("Adding allowed email:", email, role);
   try {
     const response = await fetch("/api/dashboard/allowed-emails", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ email, role, }),
+      body: JSON.stringify({ email, role }),
       credentials: 'include'
     });
 
+    const responseData = await response.json();
+    console.log("Server response:", responseData);
+
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`HTTP error! status: ${response.status}, message: ${responseData.message || 'Unknown error'}`);
     }
 
     await loadAllowedEmails();
     showCustomAlert("Email added successfully");
+    document.getElementById('newEmail').value = '';
+    document.getElementById('newRole').value = 'user';
   } catch (error) {
-    showCustomAlert("Failed to add email. Please try again.");
+    console.error("Error adding email:", error);
+    showCustomAlert(`Failed to add email: ${error.message}`);
   }
 }
 
@@ -437,8 +447,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const email = document.getElementById('newEmail').value;
         const role = document.getElementById('newRole').value;
         await addAllowedEmail(email, role);
-        document.getElementById('newEmail').value = '';
-        document.getElementById('newRole').value = 'user';
       });
     }
 
@@ -460,7 +468,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (logoutButton) {
       logoutButton.addEventListener("click", handleLogout);
     }
-  } else if (window.location.pathname === "/allowed-emails-page") {
+  } else if (window.location.pathname === "/allowed-emails.html" || window.location.pathname === "/allowed-emails") {
     initAllowedEmailsPage();
   }
 });
@@ -500,8 +508,6 @@ function initAllowedEmailsPage() {
       const email = document.getElementById('newEmail').value;
       const role = document.getElementById('newRole').value;
       await addAllowedEmail(email, role);
-      document.getElementById('newEmail').value = '';
-      document.getElementById('newRole').value = 'user';
     });
   }
 

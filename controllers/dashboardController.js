@@ -25,12 +25,18 @@ const deleteAssociatedUser = async (email) => {
 };
 
 exports.addAllowedEmail = async (req, res, next) => {
+  console.log("Received request to add allowed email:", req.body);
   try {
     const { email, role } = req.body;
+    
     const allowedEmail = await AllowedEmail.create({ email, role });
     res.status(201).json({ status: 'success', data: { allowedEmail } });
   } catch (error) {
-    handleError(error, next, 'Email already allowed');
+    console.error("Error in addAllowedEmail:", error);
+    if (error.code === 11000) {
+      return res.status(400).json({ status: 'error', message: 'Email already exists' });
+    }
+    res.status(500).json({ status: 'error', message: 'Server error', error: error.message });
   }
 };
 
