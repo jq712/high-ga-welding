@@ -14,7 +14,7 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" type="text/css" href="./styles.css" />
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body class="dashboard">
     <div class="dashboard-container">
@@ -22,7 +22,9 @@
         <nav class="dashboard__nav">
           <h1 id="dashboard" class="dashboard__title">Dashboard</h1>
           <div class="dashboard__nav-actions">
-            <a href="/allowed-emails" class="dashboard__link">Manage Emails</a>
+            <a href="/api/auth/allowed-emails" class="dashboard__link"
+              >Manage Emails</a
+            >
             <button
               id="logout-button"
               class="dashboard__button dashboard__button--logout"
@@ -62,6 +64,6 @@
         </section>
       </main>
     </div>
-    <script src="./scripts.js"></script>
+    <script src="../public/scripts.js"></script>
   </body>
 </html>

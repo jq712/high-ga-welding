@@ -183,41 +183,27 @@
         <p class="contact__subheader">
           Leave your information below and we will contact you within 24 hours!
         </p>
-        <form class="contact__form" id="contactForm">
+        <form
+          class="contact__form"
+          action="/submit-form"
+          method="POST"
+          onsubmit="preventFormReload(event)"
+        >
           <div class="form__group">
             <label for="name" class="form__label">Name:</label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              class="form__input"
-              required
-            />
+            <input type="text" name="name" class="form__input" required />
           </div>
           <div class="form__group">
             <label for="email" class="form__label">Email:</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              class="form__input"
-              required
-            />
+            <input type="email" name="email" class="form__input" required />
           </div>
           <div class="form__group">
             <label for="phone" class="form__label">Phone:</label>
-            <input
-              type="tel"
-              id="phone"
-              name="phone"
-              class="form__input"
-              required
-            />
+            <input type="tel" name="phone" class="form__input" required />
           </div>
           <div class="form__group">
             <label for="message" class="form__label">Message:</label>
             <textarea
-              id="message"
               name="message"
               class="form__input form__textarea"
               required
