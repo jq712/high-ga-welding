@@ -9,11 +9,15 @@ router.post("/login", validate(schemas.login), authController.login);
 router.post("/logout", authenticateSession, authController.logout);
 
 router.get("/dashboard", authenticateSession, (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "public", "dashboard.html"));
+  res.render('dashboard', {
+    user: req.session.user
+  });
 });
 
 router.get("/allowed-emails", authenticateSession, restrictTo("admin"), (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "public", "allowed-emails.html"));
+  res.render('allowed-emails', {
+    user: req.session.user
+  });
 });
 
 module.exports = router;

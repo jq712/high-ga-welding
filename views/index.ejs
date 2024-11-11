@@ -21,55 +21,8 @@
     <link rel="stylesheet" type="text/css" href="./styles.css" />
   </head>
   <body>
-    <header class="header glassmorphism">
-      <span class="header__company-name">HIGH GEORGIA WELDING</span>
-      <nav class="nav">
-        <ul class="nav__list">
-          <li>
-            <a href="index.html" class="nav__link">Home</a>
-          </li>
-          <li>
-            <a href="about.html" class="nav__link">About</a>
-          </li>
-          <li>
-            <a href="gallery.html" class="nav__link">Gallery</a>
-          </li>
-          <li>
-            <a href="certifications.html" class="nav__link">Certifications</a>
-          </li>
-          <li>
-            <a href="contact.html" class="nav__link">Contact</a>
-          </li>
-        </ul>
-        <button class="nav__hamburger nav__hamburger--spin">
-          <span class="nav__hamburger-box">
-            <span class="nav__hamburger-inner"></span>
-          </span>
-        </button>
-        <div class="nav__dropdown glassmorphism">
-          <ul class="nav__dropdown-list">
-            <li>
-              <a href="index.html" class="nav__dropdown-link">Home</a>
-            </li>
-            <li>
-              <a href="about.html" class="nav__dropdown-link">About</a>
-            </li>
-            <li>
-              <a href="gallery.html" class="nav__dropdown-link">Gallery</a>
-            </li>
-            <li>
-              <a href="certifications.html" class="nav__dropdown-link"
-                >Certifications</a
-              >
-            </li>
-            <li>
-              <a href="contact.html" class="nav__dropdown-link">Contact</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    </header>
-
+    <!--prettier-ignore-->
+    <%- include('partials/nav.ejs') %>
     <main>
       <section class="hero">
         <div class="hero__content">
@@ -90,13 +43,13 @@
             </p>
             <div class="hero__cta-btn-container">
               <a href="#contact" class="btn btn--animated">Get a Quote!</a>
-              <a href="about.html" class="btn btn--thin">Learn More</a>
+              <a href="/about" class="btn btn--thin">Learn More</a>
             </div>
           </div>
         </div>
         <div class="hero__image-container">
           <img
-            src="./assets/pipe-welding.jpg"
+            src="/assets/pipe-welding.jpg"
             alt="Welding Image"
             class="hero__image"
           />

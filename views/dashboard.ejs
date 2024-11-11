@@ -14,50 +14,12 @@
       href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" type="text/css" href="./styles.css" />
+    <link rel="stylesheet" type="text/css" href="/styles.css" />
   </head>
   <body class="dashboard">
     <div class="dashboard-container">
-      <header class="header glassmorphism">
-        <span class="header__description">DASHBOARD</span>
-        <nav class="nav">
-          <ul class="nav__list">
-            <li>
-              <a href="/" class="nav__link">Home Page</a>
-            </li>
-            <li>
-              <a href="/auth/allowed-emails" class="nav__link"
-                >Allowed Emails</a
-              >
-            </li>
-            <li>
-              <button onclick="handleLogout()" class="nav__link">Logout</button>
-            </li>
-          </ul>
-          <button class="nav__hamburger nav__hamburger--spin">
-            <span class="nav__hamburger-box">
-              <span class="nav__hamburger-inner"></span>
-            </span>
-          </button>
-          <div class="nav__dropdown glassmorphism">
-            <ul class="nav__dropdown-list">
-              <li>
-                <a href="/" class="nav__dropdown-link">Home Page</a>
-              </li>
-              <li>
-                <a href="/auth/allowed-emails" class="nav__dropdown-link"
-                  >Allowed Emails</a
-                >
-              </li>
-              <li>
-                <button onclick="handleLogout()" class="nav__dropdown-link">
-                  Logout
-                </button>
-              </li>
-            </ul>
-          </div>
-        </nav>
-      </header>
+      <!-- prettier-ignore -->
+      <%- include('partials/nav', { page: 'allowed-emails', headerClass: 'header', user: user }) %>
       <main class="dashboard__content" role="main">
         <section id="messages-section" class="dashboard__section">
           <h2 id="messages" class="dashboard__section-title">Messages</h2>
@@ -78,11 +40,13 @@
               </tbody>
             </table>
           </div>
+          <% if (user && user.role === 'admin') { %>
           <button id="deleteAllMessages" class="btn btn--danger">
             Delete All Messages
           </button>
+          <% } %>
         </section>
-        <!-- Image Gallery Management Section -->
+
         <section id="gallery-section" class="dashboard__section">
           <h2 id="gallery" class="dashboard__section-title">
             Image Gallery Management
@@ -105,6 +69,6 @@
         </section>
       </main>
     </div>
-    <script src="./dashboard.js"></script>
+    <script src="/dashboard.js"></script>
   </body>
 </html>

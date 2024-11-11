@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Allowed Emails | High Georgia Welding</title>
+    <link rel="stylesheet" type="text/css" href="/styles.css" />
+  </head>
+  <body class="dashboard">
+    <div class="dashboard-container">
+      <!-- prettier-ignore -->
+      <%- include('partials/nav', { page: 'allowed-emails', headerClass: 'header', user: user }) %>
+      <header class="dashboard__header">
+        <nav class="dashboard__nav">
+          <h1 id="allowed-emails" class="dashboard__title">Allowed Emails</h1>
+          <div class="dashboard__nav-actions">
+            <a href="/auth/dashboard" class="dashboard__link"
+              >Back to Dashboard</a
+            >
+            <button
+              onclick="handleLogout()"
+              class="dashboard__button dashboard__button--logout"
+            >
+              Logout
+            </button>
+          </div>
+        </nav>
+      </header>
+
+      <main class="dashboard__content" role="main">
+        <section id="allowed-emails-section" class="dashboard__section active">
+          <h2 class="dashboard__section-title">Manage Allowed Emails</h2>
+          <div class="dashboard__table-container">
+            <table id="allowedEmailsTable" class="dashboard__table">
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Added At</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Will be populated by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+    <script src="/scripts.js"></script>
+  </body>
+</html>

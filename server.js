@@ -21,17 +21,22 @@ app.use(helmet({
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "public")));
-app.use((req, res, next) => {
-  if (req.url.endsWith(".css")) {
-    res.type("text/css");
-  }
-  if (req.url.endsWith(".js")) {
-    res.type("application/javascript");
-  }
-  next();
-});
 
+
+// Add near the top with other app configurations
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+
+// Custom middleware to serve only JS and CSS files
+app.use((req, res, next) => {
+  const ext = path.extname(req.url);
+  if (ext === '.js' || ext === '.css' || ext === '.jpg' || ext === '.jpeg' || ext === '.png' || ext === '.gif' || ext === '.svg') {
+    express.static(path.join(__dirname, 'public'))(req, res, next);
+  } else {
+    // If the request is not for a JS, CSS, or image file, skip to the next middleware
+    next();
+  }
+});
 
 // Database connection
 connectDB().then(() => {

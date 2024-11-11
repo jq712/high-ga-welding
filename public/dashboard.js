@@ -1,3 +1,40 @@
+// Hamburger menu functionality
+const hamburgerMenu = document.querySelector(".nav__hamburger");
+const dropdownMenu = document.querySelector(".nav__dropdown");
+
+if (hamburgerMenu && dropdownMenu) {
+  hamburgerMenu.addEventListener("click", function (e) {
+    e.stopPropagation();
+    this.classList.toggle("is-active");
+    dropdownMenu.classList.toggle("nav__dropdown--visible");
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener("click", function (e) {
+    if (!dropdownMenu.contains(e.target) && !hamburgerMenu.contains(e.target)) {
+      hamburgerMenu.classList.remove("is-active");
+      dropdownMenu.classList.remove("nav__dropdown--visible");
+    }
+  });
+}
+
+async function handleLogout() {
+  try {
+    const response = await fetch('/auth/logout', {
+      method: 'POST',
+      credentials: 'include'
+    });
+    if (response.ok) {
+      window.location.href = '/';
+    } else {
+      showCustomAlert('Logout failed');
+    }
+  } catch (error) {
+    console.error('Error logging out:', error);
+    showCustomAlert('Error logging out');
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   displayUserRole();
   loadMessages();
@@ -140,7 +177,7 @@ function updateGalleryTable(images) {
       <td data-label="Actions">
         <button 
           onclick="deleteImage('${image._id}')" 
-          class="dashboard__button dashboard__button--delete"
+          class="btn btn--danger"
         >
           Delete
         </button>
