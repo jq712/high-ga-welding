@@ -5,7 +5,6 @@ const path = require('path');
 const { authenticateSession, restrictTo } = require("../middleware/authMiddleware");
 const { validate, schemas } = require("../middleware/validationMiddleware");
 
-router.post("/register", validate(schemas.register), authController.register);
 router.post("/login", validate(schemas.login), authController.login);
 router.post("/logout", authenticateSession, authController.logout);
 

@@ -1,32 +1,48 @@
-const User = require("./models/Users");
-const bcrypt = require("bcryptjs");
+const mongoose = require("mongoose");
+const AllowedEmail = require("./models/AllowedEmail");
 require("dotenv").config();
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
-async function createInitialAdmin() {
+if (!ADMIN_EMAIL) {
+    console.error("❌ Error: ADMIN_EMAIL must be set in .env file");
+    process.exit(1);
+}
+
+async function createAllowedEmail() {
   try {
-    const adminUser = await User.findOneAndUpdate(
+    await mongoose.connect(process.env.MONGODB_URI);
+    console.log("Connected to MongoDB");
+
+    const allowedEmail = await AllowedEmail.findOneAndUpdate(
       { email: ADMIN_EMAIL },
       {
         email: ADMIN_EMAIL,
         role: "admin",
-        isAdmin: true,
-        password: ADMIN_PASSWORD
+        addedAt: new Date()
       },
-      { upsert: true, new: true, setDefaultsOnInsert: true, runValidators: true }
+      { upsert: true, new: true, setDefaultsOnInsert: true }
     );
 
-    const action = adminUser.isNew ? "created" : "updated";
-    console.log(`✅ Admin user ${action} successfully`);
-    console.log(`📊 Admin: ${adminUser.email} (${adminUser.role}, Admin: ${adminUser.isAdmin})`);
+    const action = allowedEmail.isNew ? "created" : "updated";
+    console.log(`✅ Allowed email ${action} successfully`);
+    console.log(`📊 Email: ${allowedEmail.email} (Role: ${allowedEmail.role})`);
 
-    return adminUser;
+    await mongoose.connection.close();
+    return allowedEmail;
   } catch (error) {
-    console.error("❌ Error creating/updating initial admin:", error.message);
+    console.error("❌ Error creating/updating allowed email:", error.message);
     throw error;
   }
 }
 
-module.exports = { createInitialAdmin };
+if (require.main === module) {
+    createAllowedEmail()
+        .then(() => process.exit(0))
+        .catch(error => {
+            console.error(error);
+            process.exit(1);
+        });
+}
+
+module.exports = { createAllowedEmail };

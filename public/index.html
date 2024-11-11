@@ -183,33 +183,61 @@
         <p class="contact__subheader">
           Leave your information below and we will contact you within 24 hours!
         </p>
-        <form
-          class="contact__form"
-          action="/submit-form"
-          method="POST"
-          onsubmit="preventFormReload(event)"
-        >
+        <form id="contactForm" class="contact__form">
           <div class="form__group">
             <label for="name" class="form__label">Name:</label>
-            <input type="text" name="name" class="form__input" required />
+            <input
+              type="text"
+              id="name"
+              name="name"
+              class="form__input"
+              required
+              minlength="2"
+              maxlength="50"
+            />
+            <span class="error-message" id="nameError"></span>
           </div>
+
           <div class="form__group">
             <label for="email" class="form__label">Email:</label>
-            <input type="email" name="email" class="form__input" required />
+            <input
+              type="email"
+              id="email"
+              name="email"
+              class="form__input"
+              required
+              pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+            />
+            <span class="error-message" id="emailError"></span>
           </div>
+
           <div class="form__group">
             <label for="phone" class="form__label">Phone:</label>
-            <input type="tel" name="phone" class="form__input" required />
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              class="form__input"
+              required
+              pattern="(\+?1-?)?(\([0-9]{3}\)|[0-9]{3})[-.]?[0-9]{3}[-.]?[0-9]{4}"
+            />
+            <span class="error-message" id="phoneError"></span>
           </div>
+
           <div class="form__group">
             <label for="message" class="form__label">Message:</label>
             <textarea
+              id="message"
               name="message"
               class="form__input form__textarea"
               required
+              minlength="10"
+              maxlength="1000"
             ></textarea>
+            <span class="error-message" id="messageError"></span>
           </div>
-          <button type="submit" class="btn btn contact__submit">Submit</button>
+
+          <button type="submit" class="btn contact__submit">Submit</button>
         </form>
       </section>
     </main>

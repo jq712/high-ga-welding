@@ -3,7 +3,7 @@ const router = express.Router();
 const path = require("path");
 const { submitForm } = require("../controllers/formController");
 const { validate } = require("../middleware/validationMiddleware");
-const formSchemas = require('../models/Form');
+const { formSchemas } = require('../middleware/formValidationMiddleware');
 
 // Serve static pages
 const pages = ["index", "about", "contact", "certifications", "login", "register"];
@@ -17,8 +17,5 @@ pages.forEach((page) => {
     res.sendFile(path.join(__dirname, "..", "public", `${page}.html`));
   });
 });
-
-// Handle form submission
-router.post("/submit-form", validate(formSchemas.form), submitForm);
 
 module.exports = router;

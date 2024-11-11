@@ -4,12 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>High Georgia Welding - Gallery</title>
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css"
     />
-    <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./styles.css" />
   </head>
   <body>
     <header class="header glassmorphism">
@@ -72,15 +73,28 @@
       </div>
 
       <div id="gallery-container" class="gallery__grid">
-        <!-- Gallery items will be inserted here by glightbox -->
+        <!-- Gallery items will be inserted here by with JavaScript -->
       </div>
     </main>
+
+    <!-- Add this overlay section -->
+    <div id="overlay" class="gallery__overlay">
+      <button id="close-image" class="gallery__close">&times;</button>
+      <button id="prev" class="gallery__nav gallery__nav--prev">&lt;</button>
+      <button id="next" class="gallery__nav gallery__nav--next">&gt;</button>
+      <img
+        id="current-image"
+        class="gallery__current-image"
+        src=""
+        alt="Current image"
+      />
+    </div>
 
     <footer class="footer">
       <p>&copy; 2024 High Georgia Welding. All rights reserved.</p>
     </footer>
 
-    <script src="gallery.js"></script>
+    <script src="image-gallery.js"></script>
     <script src="scripts.js"></script>
   </body>
 </html>

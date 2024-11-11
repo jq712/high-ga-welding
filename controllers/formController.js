@@ -24,11 +24,43 @@ exports.submitForm = async (req, res, next) => {
 
 exports.getForms = async (req, res, next) => {
   try {
-    const forms = await Form.find();
+    const forms = await Form.find().sort({ submittedAt: -1 });
     res.status(200).json({
       status: "success",
-      results: forms.length,
       data: { forms },
+    });
+  } catch (error) {
+    handleError(error, next);
+  }
+};
+
+exports.deleteForm = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return next(new AppError('Form ID is required', 400));
+    }
+
+    const deletedForm = await Form.findByIdAndDelete(id);
+    if (!deletedForm) {
+      return next(new AppError('Form not found', 404));
+    }
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Form deleted successfully'
+    });
+  } catch (error) {
+    handleError(error, next);
+  }
+};
+
+exports.deleteAllForms = async (req, res, next) => {
+  try {
+    await Form.deleteMany({});
+    res.status(200).json({
+      status: 'success',
+      message: 'All forms deleted successfully'
     });
   } catch (error) {
     handleError(error, next);

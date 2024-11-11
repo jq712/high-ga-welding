@@ -18,7 +18,8 @@
     "autoprefixer": "postcss public/**/*.css --use autoprefixer -d dist/",
     "stylelint": "stylelint 'public/**/styles.css'",
     "build-css": "npm run autoprefixer && npm run stylelint",
-    "create-admin": "node createInitialAdmin.js"
+    "create-admin": "node createInitialAdmin.js",
+    "scan-images": "node scripts/seedImagesFromFolder.js"
   },
   "keywords": [],
   "author": "",
@@ -33,7 +34,6 @@
     "express": "^4.19.2",
     "express-rate-limit": "^7.3.1",
     "express-session": "^1.18.0",
-    "glightbox": "^3.3.0",
     "helmet": "^7.1.0",
     "joi": "^17.13.3",
     "mongodb": "^6.8.0",

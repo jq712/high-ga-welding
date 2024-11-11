@@ -1,6 +1,6 @@
 {
-    "watch": ["./models", "./public/styles.css", "./routes", "./server.js", "./controllers", "./public/scripts.js", "./public/*.html"],
-    "ext": "js,json",
-    "ignore": ["node_modules/"],
-    "exec": "node server.js"
-  }
+  "watch": ["server.js", "routes/", "models/", "controllers/", "middleware/", "config/"],
+  "ext": "js,json,env",
+  "ignore": ["node_modules/", "public/"],
+  "exec": "node server.js"
+}

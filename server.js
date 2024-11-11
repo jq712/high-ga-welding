@@ -58,9 +58,14 @@ app.use(session({
 }));
 
 // Routes
-app.use("/", require("./routes/publicRoutes"));
-app.use("/auth", require("./routes/authRoutes"));
-app.use("/api", require("./routes/apiRoutes"));
+const apiRoutes = require('./routes/apiRoutes');
+const authRoutes = require('./routes/authRoutes');
+const publicRoutes = require('./routes/publicRoutes');
+
+// Mount routes
+app.use('/api', apiRoutes);
+app.use('/auth', authRoutes);
+app.use('/', publicRoutes);
 
 // 404 handler
 app.use((req, res) => {

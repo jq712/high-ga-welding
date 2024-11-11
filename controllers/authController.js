@@ -19,7 +19,6 @@ exports.register = async (req, res, next) => {
       isAdmin: allowedEmail.role === 'admin'
     });
 
-    // Log the user in after successful registration
     req.session.user = {
       id: user._id,
       email: user.email,
@@ -40,30 +39,44 @@ exports.register = async (req, res, next) => {
 };
 
 exports.login = async (req, res, next) => {
-
-  const { email, password } = req.body; 
-
+  try {
+    const { email, password } = req.body;
 
     const user = await User.findOne({ email }).select('+password');
 
     if (!user) {
       return next(new AppError('Incorrect email or password', 401));
     }
+    
     const isPasswordCorrect = await user.correctPassword(password, user.password);
     console.log('password is correct');
 
     if (!isPasswordCorrect) {
       return next(new AppError('Incorrect password', 401));
+    }
+
+    req.session.user = {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+      isAdmin: user.isAdmin
+    };
+
+    // Send JSON response instead of redirect
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user: {
+          id: user._id,
+          email: user.email,
+          role: user.role,
+          isAdmin: user.isAdmin
+        }
+      }
+    });
+  } catch (error) {
+    next(error);
   }
-
-  req.session.user = {
-    id: user._id,
-    email: user.email,
-    role: user.role,
-    isAdmin: user.isAdmin
-  };
-
-  res.redirect('/auth/dashboard');   
 };
 
 exports.logout = (req, res) => {
@@ -77,7 +90,7 @@ exports.logout = (req, res) => {
   });
 };
 
-exports.getCurrentUser = (req, res) => {
+exports.getCurrentUser = async (req, res) => {
   if (req.session && req.session.user) {
     res.status(200).json({
       status: 'success',
@@ -160,95 +173,6 @@ exports.resetPassword = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
-  }
-};
-
-exports.addAllowedEmail = async (req, res, next) => {
-  try {
-    const { email, role } = req.body;
-    const allowedEmail = await AllowedEmail.create({ email, role });
-    res.status(201).json({
-      status: 'success',
-      data: { allowedEmail }
-    });
-  } catch (error) {
-    if (error.code === 11000) {
-      return next(new AppError('Email already allowed', 400));
-    }
-    next(error);
-  }
-};
-
-exports.getAllowedEmails = async (req, res, next) => {
-  try {
-    const allowedEmails = await AllowedEmail.find();
-    res.status(200).json({
-      status: 'success',
-      data: { allowedEmails }
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-exports.deleteAllowedEmail = async (req, res, next) => {
-  try {
-    const allowedEmail = await AllowedEmail.findByIdAndDelete(req.params.id);
-    if (!allowedEmail) {
-      return next(new AppError('No allowed email found with that ID', 404));
-    }
-    res.status(204).json({
-      status: 'success',
-      data: null
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-
-exports.getMessages = async (req, res, next) => {
-  try {
-    const messages = await Form.find().sort({ createdAt: -1 });
-    res.status(200).json({
-      status: 'success',
-      data: { messages }
-    });
-  } catch (error) {
-    next(new AppError('Error fetching messages', 500));
-  }
-};
-
-exports.deleteMessage = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    if (!id) {
-      return next(new AppError('Message ID is required', 400));
-    }
-
-    const deletedMessage = await Form.findByIdAndDelete(id);
-    if (!deletedMessage) {
-      return next(new AppError('Message not found', 404));
-    }
-
-    res.status(200).json({
-      status: 'success',
-      message: 'Message deleted successfully'
-    });
-  } catch (error) {
-    next(new AppError('Error deleting message', 500));
-  }
-};
-
-exports.deleteAllMessages = async (req, res, next) => {
-  try {
-    await Form.deleteMany({});
-    res.status(200).json({
-      status: 'success',
-      message: 'All messages deleted successfully'
-    });
-  } catch (error) {
-    next(new AppError('Error deleting all messages', 500));
   }
 };
 

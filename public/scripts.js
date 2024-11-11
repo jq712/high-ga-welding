@@ -37,7 +37,7 @@ async function handleFormSubmit(event, formId, apiEndpoint) {
   const data = Object.fromEntries(formData.entries());
 
   try {
-    const response = await fetch(apiEndpoint, {
+    const response = await fetch('/api/submit-form', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -169,9 +169,8 @@ async function loadMessages() {
 }
 
 async function loadAllowedEmails() {
-  console.log("Loading allowed emails...");
   try {
-    const response = await fetch('/api/dashboard/allowed-emails', {
+    const response = await fetch('/api/allowed-emails', {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include'
@@ -197,7 +196,7 @@ async function loadAllowedEmails() {
 
 async function deleteMessage(messageId) {
   try {
-    const response = await fetch(`/api/dashboard/messages/${messageId}`, {
+    const response = await fetch(`/api/messages/${messageId}`, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include'
@@ -257,13 +256,10 @@ async function deleteAllowedEmail(emailId) {
 }
 
 async function addAllowedEmail(email, role) {
-  console.log("Adding allowed email:", email, role);
   try {
-    const response = await fetch("/api/dashboard/allowed-emails", {
+    const response = await fetch("/api/allowed-emails", {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, role }),
       credentials: 'include'
     });
@@ -358,7 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const formObject = Object.fromEntries(formData.entries());
 
       try {
-        const response = await fetch('/api/forms', {
+        const response = await fetch('/api/submit-form', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -497,22 +493,3 @@ function formatDate(dateString) {
   });
 }
 
-// Add this function to handle loading of the allowed emails page
-function initAllowedEmailsPage() {
-  loadAllowedEmails();
-  
-  const addEmailForm = document.getElementById('addEmailForm');
-  if (addEmailForm) {
-    addEmailForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('newEmail').value;
-      const role = document.getElementById('newRole').value;
-      await addAllowedEmail(email, role);
-    });
-  }
-
-  const logoutButton = document.getElementById("logout-button");
-  if (logoutButton) {
-    logoutButton.addEventListener("click", handleLogout);
-  }
-}
