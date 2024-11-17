@@ -55,21 +55,34 @@ exports.updateImage = async (req, res, next) => {
 
 exports.createImage = async (req, res, next) => {
     try {
-        const { filename, description, category, path } = req.body;
-        
+        // Log incoming data for debugging
+        console.log('File received:', req.file);
+        console.log('Form data received:', req.body);
+
+        // Verify we have a file
+        if (!req.file) {
+            return next(new AppError('No image file uploaded', 400));
+        }
+
+        // Create new image document in MongoDB
         const image = await Image.create({
-            filename,
-            description,
-            category,
-            path,
+            filename: req.file.filename,
+            description: req.body.description,
+            category: req.body.category,
+            path: `/uploads/${req.file.filename}`, // Note: Using uploads directory
             uploadedAt: new Date()
         });
 
+        // Log the created image document
+        console.log('Created image document:', image);
+
+        // Send success response
         res.status(201).json({
             status: 'success',
             data: image
         });
     } catch (error) {
+        console.error('Database error:', error);
         next(new AppError('Failed to create image', 500));
     }
-}; 
+};

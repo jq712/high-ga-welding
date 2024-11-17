@@ -267,8 +267,14 @@ function updateAllowedEmailsTable(emails) {
       <td data-label="Added At">${formatDate(email.addedAt)}</td>
       <td data-label="Actions">
         <button 
+          onclick="editAllowedEmail('${email._id}')" 
+          class="btn btn--edit"
+        >
+          Edit
+        </button>
+        <button 
           onclick="deleteAllowedEmail('${email._id}')" 
-          class="dashboard__button dashboard__button--delete"
+          class="btn btn--danger"
         >
           Delete
         </button>
@@ -296,7 +302,57 @@ async function deleteAllowedEmail(emailId) {
   }
 }
 
-async function editImageDescription(imageId, currentDescription) {
+async function editAllowedEmail(emailId) {
+  // Create modal dialog
+  const dialog = document.createElement('div');
+  dialog.className = 'modal';
+  dialog.innerHTML = `
+    <div class="modal__content">
+      <h3>Edit Allowed Email</h3>
+      <div class="modal__form">
+        <div class="modal__field">
+          <label for="role">Role:</label>
+          <select id="role" class="modal__input">
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="modal__actions">
+          <button class="btn btn--secondary" onclick="closeModal()">Cancel</button>
+          <button class="btn btn--primary" onclick="saveEmailChanges('${emailId}')">Save</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(dialog);
+}
+
+async function saveEmailChanges(emailId) {
+  const role = document.getElementById('role').value;
+
+  try {
+    const response = await fetch(`/api/allowed-emails/${emailId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({ role })
+    });
+
+    if (!response.ok) throw new Error('Failed to update email');
+
+    showCustomAlert('Email updated successfully');
+    closeModal();
+    loadAllowedEmails();
+  } catch (error) {
+    console.error('Error updating email:', error);
+    showCustomAlert('Error updating email');
+  }
+}
+
+async function handleEditImage(imageId, currentDescription) {
   // Create a modal dialog instead of using prompt
   const dialog = document.createElement('div');
   dialog.className = 'modal';
@@ -414,34 +470,37 @@ document.getElementById('addImageButton')?.addEventListener('click', () => {
 });
 
 async function uploadImage() {
-    const fileInput = document.getElementById('imageFile');
-    const description = document.getElementById('description').value.trim();
-    const category = document.getElementById('category').value;
-    
-    if (!fileInput.files[0] || !description) {
-        showCustomAlert('Please fill in all fields');
-        return;
-    }
+  const fileInput = document.getElementById('imageFile');
+  const description = document.getElementById('description').value.trim();
+  const category = document.getElementById('category').value;
+  
+  if (!fileInput.files[0] || !description) {
+      showCustomAlert('Please fill in all fields');
+      return;
+  }
 
-    const formData = new FormData();
-    formData.append('image', fileInput.files[0]);
-    formData.append('description', description);
-    formData.append('category', category);
+  const formData = new FormData();
+  formData.append('image', fileInput.files[0]);
+  formData.append('description', description);
+  formData.append('category', category);
 
-    try {
-        const response = await fetch('/api/gallery/images', {
-            method: 'POST',
-            credentials: 'include',
-            body: formData
-        });
+  try {
+      const response = await fetch('/api/gallery/images', {
+          method: 'POST',
+          credentials: 'include',
+          body: formData // Don't set Content-Type header with FormData
+      });
 
-        if (!response.ok) throw new Error('Failed to upload image');
+      if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || 'Failed to upload image');
+      }
 
-        showCustomAlert('Image uploaded successfully');
-        closeModal();
-        loadGalleryImages();
-    } catch (error) {
-        console.error('Error uploading image:', error);
-        showCustomAlert('Error uploading image');
-    }
-} 
+      showCustomAlert('Image uploaded successfully');
+      closeModal();
+      loadGalleryImages();
+  } catch (error) {
+      console.error('Error uploading image:', error);
+      showCustomAlert(error.message);
+  }
+}

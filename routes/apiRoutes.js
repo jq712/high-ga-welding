@@ -7,6 +7,18 @@ const { authenticateSession, restrictTo } = require("../middleware/authMiddlewar
 const { validate, schemas } = require("../middleware/validationMiddleware");
 const { formSchemas } = require('../middleware/formValidationMiddleware');
 const imageController = require('../controllers/imageController');
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname))
+  }
+});
+const upload = multer({ storage: storage });
 
 // Create a separate router for public routes
 const publicRouter = express.Router();
@@ -31,6 +43,7 @@ router.delete("/dashboard/forms/:id", restrictTo("admin"), formController.delete
 // Allowed email routes
 router.get("/allowed-emails", restrictTo("admin"), allowedEmailController.getAllowedEmails);
 router.post("/allowed-emails", restrictTo("admin"), validate(schemas.allowedEmailWithRole), allowedEmailController.addAllowedEmail);
+router.patch("/allowed-emails/:id", restrictTo("admin"), allowedEmailController.updateAllowedEmail);
 router.delete("/allowed-emails/:id", restrictTo("admin"), allowedEmailController.deleteAllowedEmail);
 
 // Add protected route for image deletion
@@ -51,6 +64,7 @@ router.patch("/gallery/images/:id",
 router.post("/gallery/images", 
     authenticateSession, 
     restrictTo("admin"), 
+    upload.single('image'),
     imageController.createImage
 );
 

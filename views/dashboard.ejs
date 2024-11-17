@@ -2,44 +2,8 @@
 <html lang="en">
   <!--prettier-ignore-->
   <%- include('partials/head', { title: 'Dashboard', description: 'Manage messages and image gallery.', cssPath: '/styles.css' }) %>
-  <header class="header glassmorphism">
-    <span class="header__description">DASHBOARD</span>
-    <nav class="nav">
-      <ul class="nav__list">
-        <li>
-          <a href="/" class="nav__link">Home Page</a>
-        </li>
-        <li>
-          <a href="/auth/allowed-emails" class="nav__link">Allowed Emails</a>
-        </li>
-        <li>
-          <button onclick="handleLogout()" class="nav__link">Logout</button>
-        </li>
-      </ul>
-      <button class="nav__hamburger nav__hamburger--spin">
-        <span class="nav__hamburger-box">
-          <span class="nav__hamburger-inner"></span>
-        </span>
-      </button>
-      <div class="nav__dropdown glassmorphism">
-        <ul class="nav__dropdown-list">
-          <li>
-            <a href="/" class="nav__dropdown-link">Home Page</a>
-          </li>
-          <li>
-            <a href="/auth/allowed-emails" class="nav__dropdown-link"
-              >Allowed Emails</a
-            >
-          </li>
-          <li>
-            <button onclick="handleLogout()" class="nav__dropdown-link">
-              Logout
-            </button>
-          </li>
-        </ul>
-      </div>
-    </nav>
-  </header>
+  <!-- prettier-ignore -->
+  <%- include('partials/dashboard-nav', { currentPage: 'dashboard' }) %>
   <body class="dashboard">
     <div class="dashboard-container">
       <main class="dashboard__content" role="main">
@@ -67,28 +31,6 @@
             Delete All Messages
           </button>
           <% } %>
-        </section>
-
-        <section id="gallery-section" class="dashboard__section">
-          <h2 id="gallery" class="dashboard__section-title">
-            Image Gallery Management
-          </h2>
-          <div class="dashboard__table-container">
-            <button id="addImageButton" class="btn">Add Image</button>
-            <table class="dashboard__table">
-              <thead>
-                <tr>
-                  <th>Image</th>
-                  <th>Category</th>
-                  <th>Description</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody class="dashboard__gallery-container">
-                <!-- Gallery images will be dynamically inserted here -->
-              </tbody>
-            </table>
-          </div>
         </section>
       </main>
     </div>

@@ -4,46 +4,33 @@
     <!-- prettier-ignore -->
     <%- include('partials/head', { title: 'Allowed Emails', description: 'Manage allowed emails for the application.', cssPath: '/styles.css' }) %>
   </head>
-  <body class="dashboard">
-    <div class="dashboard-container">
-      <header class="dashboard__header">
-        <nav class="dashboard__nav">
-          <h1 id="allowed-emails" class="dashboard__title">Allowed Emails</h1>
-          <div class="dashboard__nav-actions">
-            <a href="/auth/dashboard" class="dashboard__link"
-              >Back to Dashboard</a
-            >
-            <button
-              onclick="handleLogout()"
-              class="dashboard__button dashboard__button--logout"
-            >
-              Logout
-            </button>
-          </div>
-        </nav>
-      </header>
-
-      <main class="dashboard__content" role="main">
-        <section id="allowed-emails-section" class="dashboard__section active">
-          <h2 class="dashboard__section-title">Manage Allowed Emails</h2>
-          <div class="dashboard__table-container">
-            <table id="allowedEmailsTable" class="dashboard__table">
-              <thead>
-                <tr>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Added At</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- Will be populated by JavaScript -->
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </main>
-    </div>
+  <!-- prettier-ignore -->
+  <%- include('partials/dashboard-nav', { currentPage: 'allowed-emails' }) %>
+  <body id="allowed-emails">
+    <section class="dashboard__section">
+      <h2 class="dashboard__section-title">Manage Allowed Emails</h2>
+      <table id="allowedEmailsTable" class="dashboard__table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Added At</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td data-label="Email">example@email.com</td>
+            <td data-label="Role">Admin</td>
+            <td data-label="Added At">2024-03-20</td>
+            <td data-label="Actions">
+              <button class="btn btn--edit">Edit</button>
+              <button class="btn btn--delete">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
     <script src="/dashboard.js"></script>
   </body>
 </html>

@@ -1,0 +1,67 @@
+<html lang="en">
+  <head>
+    <!-- prettier-ignore -->
+    <%- include('partials/head', { title: 'Gallery Management', description: 'Manage the image gallery.', cssPath: '/styles.css' }) %>
+  </head>
+  <!-- prettier-ignore -->
+  <%- include('partials/dashboard-nav', { currentPage: 'gallery-management' }) %>
+  <body>
+    <section id="gallery-section" class="dashboard__section">
+      <div class="gallery-management">
+        <div class="gallery-management__header">
+          <h2 id="gallery" class="dashboard__section-title">
+            Image Gallery Management
+          </h2>
+          <button id="addImageButton" class="btn">Add Image</button>
+        </div>
+
+        <div class="gallery-management__grid">
+          <!--prettier-ignore-->
+          <% images.forEach(image => { %>
+          <article class="gallery-card">
+            <div class="gallery-card__image-container">
+              <img
+                src="<%= image.path %>"
+                alt="<%= image.description %>"
+                class="gallery-card__image"
+                loading="lazy"
+              />
+            </div>
+
+            <div class="gallery-card__content">
+              <div class="gallery-card__field">
+                <span class="gallery-card__label">Category</span>
+                <span class="gallery-card__value"><%= image.category %></span>
+              </div>
+
+              <div class="gallery-card__field">
+                <span class="gallery-card__label">Description</span>
+                <span class="gallery-card__value"
+                  ><%= image.description %></span
+                >
+              </div>
+            </div>
+
+            <div class="gallery-card__actions">
+              <button
+                class="btn btn--edit"
+                onclick="handleEditImage('<%= image.id %>')"
+              >
+                Edit
+              </button>
+              <button
+                class="btn btn--danger"
+                onclick="handleDeleteImage('<%= image.id %>')"
+              >
+                Delete
+              </button>
+            </div>
+          </article>
+          <!--prettier-ignore-->
+          <% }) %>
+        </div>
+      </div>
+    </section>
+    <script src="/dashboard.js"></script>
+  </body>
+</html>

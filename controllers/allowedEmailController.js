@@ -29,6 +29,15 @@ exports.getAllowedEmails = async (req, res, next) => {
   }
 };
 
+exports.updateAllowedEmail = async (req, res, next) => {
+  try {
+    const allowedEmail = await AllowedEmail.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.status(200).json({ status: 'success', data: { allowedEmail } });
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.deleteAllowedEmail = async (req, res, next) => {
   try {
     const allowedEmail = await AllowedEmail.findByIdAndDelete(req.params.id);
