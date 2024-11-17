@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!--prettier-ignore-->
+  <%- include('partials/head.ejs', { 
+      title: 'Register for High Georgia Welding Dashboard | Create Account', 
+      description: 'Create an account to access the High Georgia Welding dashboard. Manage your welding projects and access exclusive resources for authorized clients.', 
+      cssPath: './styles.css' 
+  }) %>
+  <body class="register">
+    <!--prettier-ignore-->
+    <%- include('partials/nav.ejs') %>
+
+    <main class="register__container">
+      <h1 class="register__header">
+        CREATE an Account to Gain Access to the HighGeorgiaWelding.com Dashboard
+      </h1>
+      <form id="register-form" class="register__form" novalidate>
+        <div class="register__group">
+          <label for="email" class="form__label">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="form__input"
+            required
+          />
+        </div>
+        <div class="register__group">
+          <label for="password" class="form__label">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form__input"
+            required
+          />
+        </div>
+        <div class="register__group">
+          <label for="confirm-password" class="form__label"
+            >Confirm Password</label
+          >
+          <input
+            type="password"
+            id="confirm-password"
+            name="confirm-password"
+            class="form__input"
+            required
+          />
+        </div>
+        <button type="submit" class="btn register__submit">
+          Create Account
+        </button>
+      </form>
+      <div class="register__login-link">
+        Already have an account?
+        <a href="/login" class="register__login-anchor">Log in</a>
+      </div>
+    </main>
+    <script src="scripts.js"></script>
+  </body>
+</html>

@@ -76,7 +76,7 @@ async function handleLogin(event) {
     }
 
     const data = await response.json();
-    window.location.href = '/allowed-emails';
+    window.location.href = '/auth/dashboard';
   } catch (error) {
     showCustomAlert(error.message);
   }
@@ -110,7 +110,7 @@ async function handleRegister(event) {
     const data = await response.json();
     if (data.status === 'success') {
       alert('Registration successful! Please log in.');
-      window.location.href = './login.html';
+      window.location.href = '/login';
     } else {
       alert(data.message || 'Registration failed. Please try again.');
     }
@@ -168,119 +168,6 @@ async function loadMessages() {
   }
 }
 
-async function loadAllowedEmails() {
-  try {
-    const response = await fetch('/api/allowed-emails', {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include'
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log("Allowed emails data:", data);
-    if (data && data.status === "success" && Array.isArray(data.data.allowedEmails)) {
-      updateAllowedEmailsTable(data.data.allowedEmails);
-    } else {
-      updateAllowedEmailsTable([]);
-    }
-  } catch (error) {
-    console.error("Error loading allowed emails:", error);
-    showCustomAlert("Error loading allowed emails");
-    updateAllowedEmailsTable([]);
-  }
-}
-
-async function deleteMessage(messageId) {
-  try {
-    const response = await fetch(`/api/messages/${messageId}`, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include'
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    await loadMessages();
-    showCustomAlert("Message deleted successfully");
-  } catch (error) {
-    showCustomAlert(`Failed to delete message: ${error.message}`);
-  }
-}
-
-async function deleteAllMessages() {
-  try {
-    const response = await fetch('/api/dashboard/messages', {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to delete messages');
-    }
-
-    const result = await response.json();
-    console.log(result.message);
-    loadMessages(); // Refresh the messages list
-  } catch (error) {
-    console.error('Error deleting messages:', error);
-    showCustomAlert('Failed to delete messages. Please try again.');
-  }
-}
-async function deleteAllowedEmail(emailId) {
-  try {
-    const response = await fetch(`/api/dashboard/allowed-emails/${emailId}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    await loadAllowedEmails();
-    showCustomAlert("Email deleted successfully");
-  } catch (error) {
-    showCustomAlert(`Failed to delete email: ${error.message}`);
-  }
-}
-
-async function addAllowedEmail(email, role) {
-  try {
-    const response = await fetch("/api/allowed-emails", {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, role }),
-      credentials: 'include'
-    });
-
-    const responseData = await response.json();
-    console.log("Server response:", responseData);
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}, message: ${responseData.message || 'Unknown error'}`);
-    }
-
-    await loadAllowedEmails();
-    showCustomAlert("Email added successfully");
-    document.getElementById('newEmail').value = '';
-    document.getElementById('newRole').value = 'user';
-  } catch (error) {
-    console.error("Error adding email:", error);
-    showCustomAlert(`Failed to add email: ${error.message}`);
-  }
-}
-
 // Update messages table in dashboard
 function updateMessagesTable(messages) {
   const tableBody = document.querySelector("#messagesTable tbody");
@@ -318,29 +205,6 @@ async function confirmAndDeleteMessage(messageId) {
   if (confirmed) {
     await deleteMessage(messageId);
   }
-}
-
-// Update allowed emails table in dashboard
-function updateAllowedEmailsTable(emails) {
-  const tableBody = document.querySelector("#allowedEmailsTable tbody");
-  if (!tableBody) {
-    console.error("Allowed emails table body not found");
-    return;
-  }
-
-  tableBody.innerHTML = "";
-  emails.forEach((email) => {
-    const row = document.createElement("tr");
-    row.innerHTML = `
-      <td data-label="Email">${escapeHtml(email.email)}</td>
-      <td data-label="Role">${escapeHtml(email.role)}</td>
-      <td data-label="Added At">${formatDate(email.addedAt)}</td>
-      <td data-label="Actions">
-        <button class="dashboard__button dashboard__button--delete" onclick="deleteAllowedEmail('${email._id}')">Delete</button>
-      </td>
-    `;
-    tableBody.appendChild(row);
-  });
 }
 
 // Event listeners
@@ -415,57 +279,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
     }
-
-    if (document.getElementById("allowedEmailsTable")) {
-      loadAllowedEmails();
-      const allowedEmailsTable = document.getElementById("allowedEmailsTable");
-      if (allowedEmailsTable) {
-        allowedEmailsTable.addEventListener("click", async (event) => {
-          if (event.target.classList.contains("delete-email")) {
-            const emailId = event.target.getAttribute("data-id");
-            if (confirm("Are you sure you want to delete this email?")) {
-              try {
-                await deleteAllowedEmail(emailId);
-                await loadAllowedEmails();
-              } catch (error) {
-                console.error("Failed to delete email:", error);
-              }
-            }
-          }
-        });
-      }
-    }
-
-    const addEmailForm = document.getElementById('addEmailForm');
-    if (addEmailForm) {
-      addEmailForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('newEmail').value;
-        const role = document.getElementById('newRole').value;
-        await addAllowedEmail(email, role);
-      });
-    }
-
-    const deleteAllMessagesButton = document.getElementById("deleteAllMessages");
-    if (deleteAllMessagesButton) {
-      deleteAllMessagesButton.addEventListener("click", async () => {
-        if (confirm("Are you sure you want to delete all messages?")) {
-          try {
-            await deleteAllMessages();
-            await loadMessages();
-          } catch (error) {
-            console.error("Failed to delete all messages:", error);
-          }
-        }
-      });
-    }
-
-    const logoutButton = document.getElementById("logout-button");
-    if (logoutButton) {
-      logoutButton.addEventListener("click", handleLogout);
-    }
-  } else if (window.location.pathname === "/allowed-emails.html" || window.location.pathname === "/allowed-emails") {
-    initAllowedEmailsPage();
   }
 });
 

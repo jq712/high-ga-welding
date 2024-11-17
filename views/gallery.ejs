@@ -1,40 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>High Georgia Welding - Gallery</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" type="text/css" href="./styles.css" />
-  </head>
+  <!--prettier-ignore-->
+  <%- include('partials/head.ejs', {
+      title: 'High Georgia Welding',
+      description: 'High Georgia Welding was founded with a passion for precision and a commitment to excellence. Over the years, we have grown into a trusted name in the welding industry, known for our quality workmanship and customer-centric approach.',
+      cssPath: './styles.css'
+  }) %>
   <body>
     <!--prettier-ignore-->
     <%- include('partials/nav.ejs') %>
     <main class="glassmorphism gallery">
-      <h2 id="image-gallery" class="gallery__title">Image Gallery</h2>
-      <div id="filter-data-btn-container" class="gallery__filters">
-        <button class="filter-button active" data-filter="all">All</button>
-        <button class="filter-button" data-filter="pipes">Pipes</button>
-        <button class="filter-button" data-filter="structural">
+      <h2
+        id="image-gallery"
+        class="gallery__title"
+      >
+        Image Gallery
+      </h2>
+      <div
+        id="filter-data-btn-container"
+        class="gallery__filters"
+      >
+        <button
+          class="filter-button active"
+          data-filter="all"
+        >
+          All
+        </button>
+        <button
+          class="filter-button"
+          data-filter="pipes"
+        >
+          Pipes
+        </button>
+        <button
+          class="filter-button"
+          data-filter="structural"
+        >
           Structural
         </button>
       </div>
 
-      <div id="gallery-container" class="gallery__grid">
+      <div
+        id="gallery-container"
+        class="gallery__grid"
+      >
         <!-- Gallery items will be inserted here by with JavaScript -->
       </div>
     </main>
 
     <!-- Add this overlay section -->
-    <div id="overlay" class="gallery__overlay">
-      <button id="close-image" class="gallery__close">&times;</button>
-      <button id="prev" class="gallery__nav gallery__nav--prev">&lt;</button>
-      <button id="next" class="gallery__nav gallery__nav--next">&gt;</button>
+    <div
+      id="overlay"
+      class="gallery__overlay"
+    >
+      <button
+        id="close-image"
+        class="gallery__close"
+      >
+        &times;
+      </button>
+      <button
+        id="prev"
+        class="gallery__nav gallery__nav--prev"
+      >
+        &lt;
+      </button>
+      <button
+        id="next"
+        class="gallery__nav gallery__nav--next"
+      >
+        &gt;
+      </button>
       <img
         id="current-image"
         class="gallery__current-image"

@@ -44,6 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (deleteAllMessagesButton) {
     deleteAllMessagesButton.addEventListener('click', deleteAllMessages);
   }
+
+  if (document.getElementById('allowed-emails')) {
+    loadAllowedEmails();
+  }
 });
 
 async function loadMessages() {
@@ -174,7 +178,16 @@ function updateGalleryTable(images) {
       <td data-label="Category" class="dashboard__table-cell">
         ${escapeHtml(image.category)}
       </td>
+      <td data-label="Description" class="dashboard__table-cell">
+        ${escapeHtml(image.description)}
+      </td>
       <td data-label="Actions">
+        <button 
+          onclick="editImageDescription('${image._id}', '${escapeHtml(image.description)}')" 
+          class="btn btn--edit"
+        >
+          Edit
+        </button>
         <button 
           onclick="deleteImage('${image._id}')" 
           class="btn btn--danger"
@@ -225,4 +238,210 @@ function formatDate(dateString) {
 function showCustomAlert(message) {
   // Implement your custom alert function here
   alert(message);
+}
+
+async function loadAllowedEmails() {
+  try {
+    const response = await fetch('/api/allowed-emails', {
+      credentials: 'include'
+    });
+
+    if (!response.ok) throw new Error('Failed to fetch allowed emails');
+
+    const result = await response.json();
+    updateAllowedEmailsTable(result.data.allowedEmails);
+  } catch (error) {
+    console.error('Error loading allowed emails:', error);
+    showCustomAlert('Error loading allowed emails');
+  }
+}
+
+function updateAllowedEmailsTable(emails) {
+  const tableBody = document.querySelector("#allowedEmailsTable tbody");
+  if (!tableBody) return;
+
+  tableBody.innerHTML = emails.map(email => `
+    <tr>
+      <td data-label="Email">${escapeHtml(email.email)}</td>
+      <td data-label="Role">${escapeHtml(email.role)}</td>
+      <td data-label="Added At">${formatDate(email.addedAt)}</td>
+      <td data-label="Actions">
+        <button 
+          onclick="deleteAllowedEmail('${email._id}')" 
+          class="dashboard__button dashboard__button--delete"
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function deleteAllowedEmail(emailId) {
+  if (confirm('Are you sure you want to delete this email?')) {
+    try {
+      const response = await fetch(`/api/allowed-emails/${emailId}`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+
+      if (!response.ok) throw new Error('Failed to delete email');
+
+      showCustomAlert('Email deleted successfully');
+      loadAllowedEmails();
+    } catch (error) {
+      console.error('Error deleting email:', error);
+      showCustomAlert('Error deleting email');
+    }
+  }
+}
+
+async function editImageDescription(imageId, currentDescription) {
+  // Create a modal dialog instead of using prompt
+  const dialog = document.createElement('div');
+  dialog.className = 'modal';
+  dialog.innerHTML = `
+    <div class="modal__content">
+      <h3>Edit Image Details</h3>
+      <div class="modal__form">
+        <div class="modal__field">
+          <label for="category">Category:</label>
+          <select id="category" class="modal__input">
+            <option value="pipes">Pipes</option>
+            <option value="structural">Structural</option>
+          </select>
+        </div>
+        <div class="modal__field">
+          <label for="description">Description:</label>
+          <textarea 
+            id="description" 
+            class="modal__input"
+            rows="3"
+          >${currentDescription}</textarea>
+        </div>
+        <div class="modal__actions">
+          <button class="btn btn--secondary" onclick="closeModal()">Cancel</button>
+          <button class="btn btn--primary" onclick="saveImageChanges('${imageId}')">Save</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(dialog);
+}
+
+function closeModal() {
+  const modal = document.querySelector('.modal');
+  if (modal) {
+    modal.remove();
+  }
+}
+
+async function saveImageChanges(imageId) {
+  const description = document.getElementById('description').value.trim();
+  const category = document.getElementById('category').value;
+
+  if (!description) {
+    showCustomAlert('Description cannot be empty');
+    return;
+  }
+
+  try {
+    const response = await fetch(`/api/gallery/images/${imageId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify({ 
+        description,
+        category 
+      })
+    });
+
+    if (!response.ok) throw new Error('Failed to update image');
+
+    showCustomAlert('Image updated successfully');
+    closeModal();
+    loadGalleryImages();
+  } catch (error) {
+    console.error('Error updating image:', error);
+    showCustomAlert('Error updating image');
+  }
+}
+
+document.getElementById('addImageButton')?.addEventListener('click', () => {
+    const dialog = document.createElement('div');
+    dialog.className = 'modal';
+    dialog.innerHTML = `
+        <div class="modal__content">
+            <h3>Add New Image</h3>
+            <div class="modal__form">
+                <div class="modal__field">
+                    <label for="imageFile">Image File:</label>
+                    <input type="file" 
+                        id="imageFile" 
+                        accept="image/*" 
+                        class="modal__input"
+                        required
+                    />
+                </div>
+                <div class="modal__field">
+                    <label for="category">Category:</label>
+                    <select id="category" class="modal__input" required>
+                        <option value="pipes">Pipes</option>
+                        <option value="structural">Structural</option>
+                    </select>
+                </div>
+                <div class="modal__field">
+                    <label for="description">Description:</label>
+                    <textarea 
+                        id="description" 
+                        class="modal__input"
+                        rows="3"
+                        required
+                    ></textarea>
+                </div>
+                <div class="modal__actions">
+                    <button class="btn btn--secondary" onclick="closeModal()">Cancel</button>
+                    <button class="btn btn--primary" onclick="uploadImage()">Upload</button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(dialog);
+});
+
+async function uploadImage() {
+    const fileInput = document.getElementById('imageFile');
+    const description = document.getElementById('description').value.trim();
+    const category = document.getElementById('category').value;
+    
+    if (!fileInput.files[0] || !description) {
+        showCustomAlert('Please fill in all fields');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('image', fileInput.files[0]);
+    formData.append('description', description);
+    formData.append('category', category);
+
+    try {
+        const response = await fetch('/api/gallery/images', {
+            method: 'POST',
+            credentials: 'include',
+            body: formData
+        });
+
+        if (!response.ok) throw new Error('Failed to upload image');
+
+        showCustomAlert('Image uploaded successfully');
+        closeModal();
+        loadGalleryImages();
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        showCustomAlert('Error uploading image');
+    }
 } 

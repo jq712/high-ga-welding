@@ -1,25 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login | High Georgia Welding - Access Your Welding Dashboard</title>
-    <meta
-      name="description"
-      content="Securely log in to High Georgia Welding's dashboard. Manage your welding projects, view reports, and access exclusive resources for our valued clients."
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" type="text/css" href="./styles.css" />
-  </head>
+  <!--prettier-ignore-->
+  <%- include('partials/head.ejs', { 
+      title: 'Login | High Georgia Welding - Access Your Welding Dashboard', 
+      description: "Securely log in to High Georgia Welding's dashboard. Manage your welding projects, view reports, and access exclusive resources for our valued clients.", 
+      cssPath: './styles.css' 
+  }) %>
   <body class="login">
+    <!--prettier-ignore-->
+    <%- include('partials/nav.ejs') %>
+
     <main class="login__container">
       <h3 class="login__header">
-        LOGIN to Access HighGeorgiaWelding.com Dashboard
+        LOGIN to Access High Georgia Welding Dashboard
       </h3>
       <form class="login__form" id="login-form">
         <div class="form__group">

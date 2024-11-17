@@ -1,25 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>High Georgia Welding | Expert Welding Services in Georgia</title>
-    <meta
-      name="description"
-      content="High Georgia Welding offers professional welding services in Georgia. Specializing in custom fabrication, repairs, and certified welding for industrial and commercial projects."
-    />
-    <meta
-      name="keywords"
-      content="welding, Georgia, High Georgia Welding, custom fabrication, welding repairs, certified welding, industrial welding, commercial welding"
-    />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" type="text/css" href="./styles.css" />
-  </head>
+  <!--prettier-ignore-->
+  <%- include('partials/head.ejs', {
+      title: 'High Georgia Welding',
+      description: 'High Georgia Welding was founded with a passion for precision and a commitment to excellence. Over the years, we have grown into a trusted name in the welding industry, known for our quality workmanship and customer-centric approach.',
+      cssPath: './styles.css'
+  }) %>
   <body>
     <!--prettier-ignore-->
     <%- include('partials/nav.ejs') %>
@@ -42,8 +28,16 @@
               Over 15 years of experience bringing the weld to you.
             </p>
             <div class="hero__cta-btn-container">
-              <a href="#contact" class="btn btn--animated">Get a Quote!</a>
-              <a href="/about" class="btn btn--thin">Learn More</a>
+              <a
+                href="#contact"
+                class="btn btn--animated"
+                >Get a Quote!</a
+              >
+              <a
+                href="/about"
+                class="btn btn--thin"
+                >Learn More</a
+              >
             </div>
           </div>
         </div>
@@ -127,7 +121,10 @@
         </div>
       </section>
 
-      <section id="contact" class="content-container glassmorphism">
+      <section
+        id="contact"
+        class="content-container glassmorphism"
+      >
         <h2 class="contact__header">Contact Us</h2>
         <p class="contact__intro">
           Do <strong>YOU</strong> have a <strong>job</strong> we can assist you
@@ -136,9 +133,16 @@
         <p class="contact__subheader">
           Leave your information below and we will contact you within 24 hours!
         </p>
-        <form id="contactForm" class="contact__form">
+        <form
+          id="contactForm"
+          class="contact__form"
+        >
           <div class="form__group">
-            <label for="name" class="form__label">Name:</label>
+            <label
+              for="name"
+              class="form__label"
+              >Name:</label
+            >
             <input
               type="text"
               id="name"
@@ -148,11 +152,18 @@
               minlength="2"
               maxlength="50"
             />
-            <span class="error-message" id="nameError"></span>
+            <span
+              class="error-message"
+              id="nameError"
+            ></span>
           </div>
 
           <div class="form__group">
-            <label for="email" class="form__label">Email:</label>
+            <label
+              for="email"
+              class="form__label"
+              >Email:</label
+            >
             <input
               type="email"
               id="email"
@@ -161,11 +172,18 @@
               required
               pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
             />
-            <span class="error-message" id="emailError"></span>
+            <span
+              class="error-message"
+              id="emailError"
+            ></span>
           </div>
 
           <div class="form__group">
-            <label for="phone" class="form__label">Phone:</label>
+            <label
+              for="phone"
+              class="form__label"
+              >Phone:</label
+            >
             <input
               type="tel"
               id="phone"
@@ -174,11 +192,18 @@
               required
               pattern="(\+?1-?)?(\([0-9]{3}\)|[0-9]{3})[-.]?[0-9]{3}[-.]?[0-9]{4}"
             />
-            <span class="error-message" id="phoneError"></span>
+            <span
+              class="error-message"
+              id="phoneError"
+            ></span>
           </div>
 
           <div class="form__group">
-            <label for="message" class="form__label">Message:</label>
+            <label
+              for="message"
+              class="form__label"
+              >Message:</label
+            >
             <textarea
               id="message"
               name="message"
@@ -187,10 +212,18 @@
               minlength="10"
               maxlength="1000"
             ></textarea>
-            <span class="error-message" id="messageError"></span>
+            <span
+              class="error-message"
+              id="messageError"
+            ></span>
           </div>
 
-          <button type="submit" class="btn contact__submit">Submit</button>
+          <button
+            type="submit"
+            class="btn contact__submit"
+          >
+            Submit
+          </button>
         </form>
       </section>
     </main>

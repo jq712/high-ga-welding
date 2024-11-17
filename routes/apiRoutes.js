@@ -40,4 +40,18 @@ router.delete("/gallery/images/:id",
     imageController.deleteImage
 );
 
+// Add protected route for image update
+router.patch("/gallery/images/:id", 
+    authenticateSession, 
+    restrictTo("admin"), 
+    imageController.updateImage
+);
+
+// Add protected route for image creation
+router.post("/gallery/images", 
+    authenticateSession, 
+    restrictTo("admin"), 
+    imageController.createImage
+);
+
 module.exports = router;

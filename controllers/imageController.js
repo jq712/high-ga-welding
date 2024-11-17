@@ -28,4 +28,48 @@ exports.deleteImage = async (req, res, next) => {
     } catch (error) {
         next(new AppError('Failed to delete image', 500));
     }
+};
+
+exports.updateImage = async (req, res, next) => {
+    try {
+        const { description, category } = req.body;
+        
+        const image = await Image.findByIdAndUpdate(
+            req.params.id,
+            { description, category },
+            { new: true, runValidators: true }
+        );
+
+        if (!image) {
+            return next(new AppError('No image found with that ID', 404));
+        }
+
+        res.status(200).json({
+            status: 'success',
+            data: image
+        });
+    } catch (error) {
+        next(new AppError('Failed to update image', 500));
+    }
+};
+
+exports.createImage = async (req, res, next) => {
+    try {
+        const { filename, description, category, path } = req.body;
+        
+        const image = await Image.create({
+            filename,
+            description,
+            category,
+            path,
+            uploadedAt: new Date()
+        });
+
+        res.status(201).json({
+            status: 'success',
+            data: image
+        });
+    } catch (error) {
+        next(new AppError('Failed to create image', 500));
+    }
 }; 
