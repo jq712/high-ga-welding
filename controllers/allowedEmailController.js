@@ -17,9 +17,26 @@ exports.addAllowedEmail = async (req, res, next) => {
   }
 };
 
+exports.getAllowedEmailsPage = async (req, res, next) => {
+  try {
+    const allowedEmails = await AllowedEmail.find().sort({ addedAt: -1 });
+    console.log('Fetched emails with dates:', allowedEmails.map(email => ({
+      email: email.email,
+      addedAt: email.addedAt
+    })));
+    
+    res.render('allowed-emails', {
+      allowedEmails,
+      currentPage: 'allowed-emails'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.getAllowedEmails = async (req, res, next) => {
   try {
-    const allowedEmails = await AllowedEmail.find();
+    const allowedEmails = await AllowedEmail.find().sort({ createdAt: -1 });
     res.status(200).json({
       status: 'success',
       data: { allowedEmails }

@@ -11,27 +11,27 @@
       </li>
       <li>
         <a
-          href="/auth/dashboard"
+          href="/dashboard"
           class="nav__link <%= currentPage === 'dashboard' ? 'active' : '' %>"
           >Messages</a
         >
       </li>
       <li>
         <a
-          href="/auth/allowed-emails"
+          href="/admin/allowed-emails"
           class="nav__link <%= currentPage === 'allowed-emails' ? 'active' : '' %>"
           >Allowed Emails</a
         >
       </li>
       <li>
         <a
-          href="/auth/gallery-management"
+          href="/admin/gallery-management"
           class="nav__link <%= currentPage === 'gallery-management' ? 'active' : '' %>"
           >Gallery Management</a
         >
       </li>
       <li>
-        <button onclick="handleLogout()" class="btn btn--thin btn--logout">
+        <button class="btn btn--thin btn--logout" data-action="logout">
           Logout
         </button>
       </li>
@@ -52,29 +52,29 @@
         </li>
         <li>
           <a
-            href="/auth/dashboard"
+            href="/dashboard"
             class="nav__dropdown-link <%= currentPage === 'dashboard' ? 'active' : '' %>"
             >Messages</a
           >
         </li>
         <li>
           <a
-            href="/auth/allowed-emails"
+            href="/admin/allowed-emails"
             class="nav__dropdown-link <%= currentPage === 'allowed-emails' ? 'active' : '' %>"
             >Allowed Emails</a
           >
         </li>
         <li>
           <a
-            href="/auth/gallery-management"
+            href="/admin/gallery-management"
             class="nav__dropdown-link <%= currentPage === 'gallery-management' ? 'active' : '' %>"
             >Gallery Management</a
           >
         </li>
         <li>
           <button
-            onclick="handleLogout()"
             class="nav__dropdown-link btn btn--logout"
+            data-action="logout"
           >
             Logout
           </button>

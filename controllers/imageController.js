@@ -1,88 +1,102 @@
 const Image = require('../models/Image');
 const { AppError } = require('../middleware/errorHandler');
+const fs = require('fs').promises;
+const path = require('path');
 
-exports.getAllImages = async (req, res, next) => {
+// Display all images in gallery view
+exports.renderGallery = async (req, res, next) => {
     try {
-        const images = await Image.find().select('-__v');
-        res.status(200).json({
-            status: 'success',
-            data: images
+        // Get all images, newest first
+        const images = await Image.find()
+            .select('_id filename description category path uploadedAt')
+            .sort({ uploadedAt: -1 })
+            .lean();
+
+        // Format dates and prepare images for display
+        const formattedImages = images.map(image => ({
+            ...image,
+            uploadedAt: new Date(image.uploadedAt).toLocaleDateString()
+        }));
+
+        // Check if we're in admin view
+        const isAdmin = req.path.includes('management');
+        const viewName = isAdmin ? 'gallery-management' : 'gallery';
+        
+        res.render(viewName, {
+            images: formattedImages,
+            currentPage: viewName,
+            user: isAdmin ? req.session.user : null
         });
     } catch (error) {
-        console.error('Gallery fetch error:', error);
-        next(new AppError('Failed to load images', 500));
+        next(new AppError('Failed to load gallery', 500));
     }
 };
 
-// Add additional image-related controller methods
+// Remove image from storage and database
 exports.deleteImage = async (req, res, next) => {
     try {
-        const image = await Image.findByIdAndDelete(req.params.id);
+        const image = await Image.findById(req.params.id);
         if (!image) {
-            return next(new AppError('No image found with that ID', 404));
+            return next(new AppError('Image not found', 404));
         }
-        res.status(204).json({
-            status: 'success',
-            data: null
-        });
+
+        // Try to delete the actual image file
+        const filePath = path.join(__dirname, '..', 'public', image.path);
+        await fs.unlink(filePath).catch(err => console.error('File deletion failed:', err));
+
+        // Remove from database
+        await Image.findByIdAndDelete(req.params.id);
+        
+        res.status(204).send();
     } catch (error) {
         next(new AppError('Failed to delete image', 500));
     }
 };
 
-exports.updateImage = async (req, res, next) => {
+// Update image details
+exports.updateImage = async (req, res) => {
     try {
-        const { description, category } = req.body;
-        
+        const { id } = req.params;
+        const { category, description } = req.body;
+
         const image = await Image.findByIdAndUpdate(
-            req.params.id,
-            { description, category },
-            { new: true, runValidators: true }
+            id,
+            { category, description },
+            { new: true }
         );
 
         if (!image) {
-            return next(new AppError('No image found with that ID', 404));
+            return res.status(404).json({ message: 'Image not found' });
         }
 
-        res.status(200).json({
-            status: 'success',
-            data: image
-        });
+        res.status(200).json({ data: image });
     } catch (error) {
-        next(new AppError('Failed to update image', 500));
+        res.status(500).json({ message: 'Failed to update image' });
     }
 };
 
+// Save new image with details
 exports.createImage = async (req, res, next) => {
     try {
-        // Log incoming data for debugging
-        console.log('File received:', req.file);
-        console.log('Form data received:', req.body);
-
-        // Verify we have a file
+        // Check for required data
         if (!req.file) {
-            return next(new AppError('No image file uploaded', 400));
+            return next(new AppError('No image uploaded', 400));
+        }
+        if (!req.body.description || !req.body.category) {
+            return next(new AppError('Missing description or category', 400));
         }
 
-        // Create new image document in MongoDB
+        // Save image details to database
         const image = await Image.create({
             filename: req.file.filename,
             description: req.body.description,
             category: req.body.category,
-            path: `/uploads/${req.file.filename}`, // Note: Using uploads directory
+            path: `/uploads/${req.file.filename}`,
             uploadedAt: new Date()
         });
 
-        // Log the created image document
-        console.log('Created image document:', image);
-
-        // Send success response
-        res.status(201).json({
-            status: 'success',
-            data: image
-        });
+        res.status(201).json({ data: image });
     } catch (error) {
-        console.error('Database error:', error);
-        next(new AppError('Failed to create image', 500));
+        next(new AppError('Failed to save image', 500));
     }
 };

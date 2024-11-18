@@ -19,15 +19,31 @@
           </tr>
         </thead>
         <tbody>
+          <% if (allowedEmails && allowedEmails.length > 0) { %> <%
+          allowedEmails.forEach(email => { %>
           <tr>
-            <td data-label="Email">example@email.com</td>
-            <td data-label="Role">Admin</td>
-            <td data-label="Added At">2024-03-20</td>
+            <td data-label="Email"><%= email.email %></td>
+            <td data-label="Role"><%= email.role %></td>
+            <td data-label="Added At">
+              <%= email.addedAt ? new
+              Date(email.addedAt).toLocaleString('en-US', { year: 'numeric',
+              month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+              }) : 'Date not available' %>
+            </td>
             <td data-label="Actions">
-              <button class="btn btn--edit">Edit</button>
-              <button class="btn btn--delete">Delete</button>
+              <button class="btn btn--edit" data-id="<%= email._id %>">
+                Edit
+              </button>
+              <button class="btn btn--delete" data-id="<%= email._id %>">
+                Delete
+              </button>
             </td>
           </tr>
+          <% }) %> <% } else { %>
+          <tr>
+            <td colspan="4" class="text-center">No allowed emails found</td>
+          </tr>
+          <% } %>
         </tbody>
       </table>
     </section>

@@ -7,18 +7,7 @@ const { authenticateSession, restrictTo } = require("../middleware/authMiddlewar
 const { validate, schemas } = require("../middleware/validationMiddleware");
 const { formSchemas } = require('../middleware/formValidationMiddleware');
 const imageController = require('../controllers/imageController');
-const multer = require('multer');
-const path = require('path');
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'public/uploads/')
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname))
-  }
-});
-const upload = multer({ storage: storage });
+const upload = require('../middleware/uploadMiddleware');
 
 // Create a separate router for public routes
 const publicRouter = express.Router();
@@ -27,7 +16,6 @@ const publicRouter = express.Router();
 publicRouter.post("/auth/register", validate(schemas.register), authController.register);
 publicRouter.post("/submit-form", validate(formSchemas.submitForm), formController.submitForm);
 publicRouter.get("/current-user", authController.getCurrentUser);
-publicRouter.get("/gallery/images", imageController.getAllImages);
 
 // Mount public routes at the root level
 router.use(publicRouter);
@@ -36,7 +24,7 @@ router.use(publicRouter);
 router.use(authenticateSession);
 
 // Protected routes go here
-router.get("/dashboard/forms", authenticateSession, formController.getForms);
+router.get("/dashboard/forms", formController.getForms);
 router.delete("/dashboard/forms", restrictTo("admin"), formController.deleteAllForms);
 router.delete("/dashboard/forms/:id", restrictTo("admin"), formController.deleteForm);
 
@@ -46,26 +34,15 @@ router.post("/allowed-emails", restrictTo("admin"), validate(schemas.allowedEmai
 router.patch("/allowed-emails/:id", restrictTo("admin"), allowedEmailController.updateAllowedEmail);
 router.delete("/allowed-emails/:id", restrictTo("admin"), allowedEmailController.deleteAllowedEmail);
 
-// Add protected route for image deletion
-router.delete("/gallery/images/:id", 
-    authenticateSession, 
-    restrictTo("admin"), 
-    imageController.deleteImage
-);
-
-// Add protected route for image update
-router.patch("/gallery/images/:id", 
-    authenticateSession, 
-    restrictTo("admin"), 
-    imageController.updateImage
-);
-
-// Add protected route for image creation
+// Gallery routes
 router.post("/gallery/images", 
-    authenticateSession, 
-    restrictTo("admin"), 
+    restrictTo("admin"),
     upload.single('image'),
     imageController.createImage
 );
+
+router.route('/gallery/images/:id')
+    .patch(restrictTo("admin"), imageController.updateImage)
+    .delete(restrictTo("admin"), imageController.deleteImage);
 
 module.exports = router;

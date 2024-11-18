@@ -280,6 +280,15 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   }
+
+  // Initialize user role display
+  UserManager.displayUserRole();
+
+  // Add logout handler to logout buttons
+  const logoutButtons = document.querySelectorAll('[data-action="logout"]');
+  logoutButtons.forEach(button => {
+    button.addEventListener('click', UserManager.handleLogout);
+  });
 });
 
 // Add this function at the beginning of your file or before it's used
@@ -304,5 +313,46 @@ function formatDate(dateString) {
     hour: '2-digit',
     minute: '2-digit'
   });
+}
+
+// Add to existing scripts.js
+class UserManager {
+  static async displayUserRole() {
+    try {
+      const userRole = document.getElementById("userRole");
+      if (!userRole) return;
+
+      const response = await fetch("/api/current-user", {
+        credentials: "include",
+      });
+
+      if (!response.ok) throw new Error("Failed to fetch user role");
+
+      const data = await response.json();
+      if (data.data && data.data.user) {
+        userRole.textContent = `Role: ${data.data.user.role}`;
+      }
+    } catch (error) {
+      console.error("Error fetching user role:", error);
+    }
+  }
+
+  static async handleLogout() {
+    try {
+      const response = await fetch("/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      
+      if (response.ok) {
+        window.location.href = "/";
+      } else {
+        showCustomAlert("Logout failed");
+      }
+    } catch (error) {
+      console.error("Error logging out:", error);
+      showCustomAlert("Error logging out");
+    }
+  }
 }
 

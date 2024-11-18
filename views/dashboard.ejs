@@ -4,7 +4,7 @@
   <%- include('partials/head', { title: 'Dashboard', description: 'Manage messages and image gallery.', cssPath: '/styles.css' }) %>
   <!-- prettier-ignore -->
   <%- include('partials/dashboard-nav', { currentPage: 'dashboard' }) %>
-  <body class="dashboard">
+  <body data-page="messages" class="dashboard">
     <div class="dashboard-container">
       <main class="dashboard__content" role="main">
         <section id="messages-section" class="dashboard__section">

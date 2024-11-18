@@ -79,11 +79,15 @@ app.use(
 const apiRoutes = require("./routes/apiRoutes");
 const authRoutes = require("./routes/authRoutes");
 const publicRoutes = require("./routes/publicRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 // Mount routes
 app.use("/api", apiRoutes);
 app.use("/auth", authRoutes);
 app.use("/", publicRoutes);
+app.use("/dashboard", dashboardRoutes);
+app.use("/admin", adminRoutes);
 
 // 404 handler
 app.use((req, res) => {
